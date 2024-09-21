@@ -1,0 +1,17 @@
+{
+    "name": "vectorial1024/open-location-code-php",
+    "description": "A modern Open Location Code implementation in PHP.",
+    "type": "library",
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "Vectorial1024\\OpenLocationCodePhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vectorial1024"
+        }
+    ],
+    "require": {}
+}
