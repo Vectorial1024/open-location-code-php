@@ -8,6 +8,11 @@
             "Vectorial1024\\OpenLocationCodePhp\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Vectorial1024\\OpenLocationCodePhp\\Test": "test/"
+        }
+    },
     "authors": [
         {
             "name": "Vectorial1024"
@@ -15,5 +20,8 @@
     ],
     "require": {
         "php": ">=8.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "11"
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Vectorial1024\OpenLocationCodePhp;
+
 /**
  * Coordinates of a decoded Open Location Code.
  * 

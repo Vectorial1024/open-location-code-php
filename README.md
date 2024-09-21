@@ -17,3 +17,10 @@ via Composer:
 
 ## Example code
 (WIP)
+
+## Testing
+via PHPUnit:
+
+```sh
+./vendor/bin/phpunit test
+```
