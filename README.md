@@ -28,10 +28,14 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
 // This code snippet will center around King's Cross station in London, UK.
 // Its main entrance at (51.530812, -0.123767) has the Open Location Code of "9C3XGVJG+8FH".
 
+$invalidCode = "11iL!Illi1!!!";
+
+$kingsCrossLatitude = 51.530812;
+$kingsCrossLongitude = -0.123767;
 $kingsCrossCode = "9C3XGVJG+8FH";
 
 // test validity of the code
-$validity = OpenLocationCode::isValidCode("11iL!Illi1!!!"); // invalid code; returns false
+$validity = OpenLocationCode::isValidCode($invalidCode); // invalid code; returns false
 $validity = OpenLocationCode::isValidCode($kingsCrossCode); // valid code; returns true
 ```
 
