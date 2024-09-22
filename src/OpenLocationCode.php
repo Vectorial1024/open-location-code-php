@@ -62,4 +62,114 @@ final class OpenLocationCode
 
     // Value of the most significant longitude digit after it has been converted to an integer.
     private const int LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
+
+    /**
+     * Constructor of OLC objects; for internal use only.
+     * @param string $code The string representation of the Open Location code.
+     */
+    private function __construct(
+        public readonly string $code
+    ) {
+    }
+
+    // wip factory constructors here
+
+    // ---
+
+    /**
+     * Returns whether the provided string is a valid Open Location code.
+     * 
+     * @param string $code The code to check.
+     * @return bool True if it is a valid full or short code.
+     */
+    public static function isValidCode(?string $code): bool
+    {
+        if ($code === null || strlen($code) < 2) {
+            return false;
+        }
+        $code = strtoupper($code);
+
+        // There must be exactly one separator.
+        $separatorPosition = strpos($code, self::SEPARATOR);
+        if ($separatorPosition === false) {
+            return false;
+        }
+        if ($separatorPosition != strrpos($code, self::SEPARATOR)) {
+            return false;
+        }
+        // There must be an even number of at most 8 characters before the separator.
+        if ($separatorPosition % 2 != 0 || $separatorPosition > self::SEPARATOR_POSITION) {
+            return false;
+        }
+
+        // Check first two characters: only some values from the alphabet are permitted.
+        if ($separatorPosition == self::SEPARATOR_POSITION) {
+            // First latitude character can only have first 9 values.
+            if (strpos(self::CODE_ALPHABET, $code[0]) > 8) {
+                return false;
+            }
+  
+            // First longitude character can only have first 18 values.
+            if (strpos(self::CODE_ALPHABET, $code[1]) > 17) {
+                return false;
+            }
+        }
+
+        // Check the characters before the separator.
+        $paddingStarted = false;
+        for ($i = 0; $i < $separatorPosition; $i++) {
+            $currentChar = $code[$i];
+            if (!str_contains(self::CODE_ALPHABET, $currentChar) && $currentChar != self::PADDING_CHARACTER) {
+                // Invalid character
+                return false;
+            }
+            if ($paddingStarted) {
+                // Once padding starts, there must not be anything but padding.
+                if ($currentChar != self::PADDING_CHARACTER) {
+                    return false;
+                }
+            } elseif ($currentChar == self::PADDING_CHARACTER) {
+                $paddingStarted = true;
+                // Short codes cannot have padding
+                if ($separatorPosition < self::SEPARATOR_POSITION) {
+                    return false;
+                }
+                // Padding can start on even character: 2, 4 or 6.
+                if ($i != 2 && $i != 4 && $i != 6) {
+                    return false;
+                }
+            }
+            unset($currentChar);
+        }
+        unset($i);
+
+        // Check the characters after the separator.
+        $codeLength = strlen($code);
+        if ($codeLength > $separatorPosition + 1) {
+            if ($paddingStarted) {
+                return false;
+            }
+            // Only one character after separator is forbidden.
+            if ($codeLength == $separatorPosition + 2) {
+                return false;
+            }
+            for ($i = $separatorPosition + 1; $i < $codeLength; $i++) {
+                if (!str_contains(self::CODE_ALPHABET, $code[$i])) {
+                    return false;
+                }
+            }
+            unset($i);
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether this Open Location code is valid.
+     * @return bool True if it is a valid full or short code.
+     */
+    public function isValid(): bool
+    {
+        return self::isValidCode($this->code);
+    }
 }
