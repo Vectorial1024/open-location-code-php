@@ -17,6 +17,8 @@ via Composer:
 
 (WIP)
 
+Special notice: this library requires a 64-bit PHP runtime because some Open Location Code calculation may exceed the 32-bit integer limit. (Subject to review.)
+
 ## Example code
 (WIP)
 
