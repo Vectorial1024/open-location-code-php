@@ -22,6 +22,8 @@ Special notice: this library requires a 64-bit PHP runtime because some Open Loc
 ## Example code
 (WIP)
 
+### Checking and creating OLC codes
+
 ```php
 use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
 
@@ -37,7 +39,13 @@ $kingsCrossCode = "9C3XGVJG+8FH";
 // test validity of the code
 $validity = OpenLocationCode::isValidCode($invalidCode); // invalid code; returns false
 $validity = OpenLocationCode::isValidCode($kingsCrossCode); // valid code; returns true
+
+// create object from code
+$invalidObject = OpenLocationCode::createFromCode($invalidCode); // invalid code; throws InvalidArgumentException
+$validObject = OpenLocationCode::createFromCode($kingsCrossCode); // returns OpenLocationCode instance
 ```
+
+### Other references
 
 ## Testing
 via PHPUnit; first ensure PHPUnit has been set up correctly:

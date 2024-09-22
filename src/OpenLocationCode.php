@@ -2,6 +2,8 @@
 
 namespace Vectorial1024\OpenLocationCodePhp;
 
+use InvalidArgumentException;
+
 /**
  * An object representing an Open Location Code (OLC).
  * 
@@ -66,6 +68,8 @@ final class OpenLocationCode
     /**
      * Constructor of OLC objects; for internal use only.
      * @param string $code The string representation of the Open Location code.
+     * 
+     * @see self::createFromCode()
      */
     private function __construct(
         public readonly string $code
@@ -73,6 +77,21 @@ final class OpenLocationCode
     }
 
     // wip factory constructors here
+
+    /**
+     * Creates Open Location Code object for the provided code.
+     * 
+     * @param string $code A valid OLC code; can be a full code or a short code.
+     * @return self The created OLC object.
+     * @throws InvalidArgumentException when the passed code is not valid.
+     */
+    public static function createFromCode(?string $code): self
+    {
+        if (!self::isValidCode($code)) {
+            throw new InvalidArgumentException("The provided code " . ($code ?? "(null)") . " is not a valid Open Location Code.");
+        }
+        return new self(strtoupper($code));
+    }
 
     // ---
 
