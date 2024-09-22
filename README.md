@@ -20,6 +20,19 @@ via Composer:
 ## Example code
 (WIP)
 
+```php
+use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
+
+// This code snippet will center around King's Cross station in London, UK.
+// Its main entrance at (51.530812, -0.123767) has the Open Location Code of "9C3XGVJG+8FH".
+
+$kingsCrossCode = "9C3XGVJG+8FH";
+
+// test validity of the code
+$validity = OpenLocationCode::isValidCode("11iL!Illi1!!!"); // invalid code; returns false
+$validity = OpenLocationCode::isValidCode($kingsCrossCode); // valid code; returns true
+```
+
 ## Testing
 via PHPUnit; first ensure PHPUnit has been set up correctly:
 
