@@ -21,7 +21,13 @@ via Composer:
 (WIP)
 
 ## Testing
-via PHPUnit:
+via PHPUnit; first ensure PHPUnit has been set up correctly:
+
+```sh
+composer install
+```
+
+Then:
 
 ```sh
 ./vendor/bin/phpunit test
