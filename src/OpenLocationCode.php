@@ -31,7 +31,7 @@ final class OpenLocationCode
     private const int PAIR_CODE_LENGTH = 10;
 
     // Number of digits in the grid coding section.
-    private const int GRID_CODE_LENGTH = MAX_DIGIT_COUNT - PAIR_CODE_LENGTH;
+    private const int GRID_CODE_LENGTH = self::MAX_DIGIT_COUNT - self::PAIR_CODE_LENGTH;
 
     // The base to use to convert numbers to/from.
     // Note: since PHP cannot initialize constants just like in Java, we cannot easily ensure this number is correct.
@@ -58,8 +58,8 @@ final class OpenLocationCode
     private const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
 
     // Value of the most significant latitude digit after it has been converted to an integer.
-    private const int LAT_MSP_VALUE = LAT_INTEGER_MULTIPLIER * ENCODING_BASE * ENCODING_BASE;
+    private const int LAT_MSP_VALUE = self::LAT_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
 
     // Value of the most significant longitude digit after it has been converted to an integer.
-    private const int LNG_MSP_VALUE = LNG_INTEGER_MULTIPLIER * ENCODING_BASE * ENCODING_BASE;
+    private const int LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
 }
