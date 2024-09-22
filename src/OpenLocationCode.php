@@ -65,6 +65,9 @@ final class OpenLocationCode
     // Value of the most significant longitude digit after it has been converted to an integer.
     private const int LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
 
+    // The 360 degree circle information to normalize longitudes.
+    private const int CIRCLE_DEG = 2 * self::LONGITUDE_MAX;
+
     /**
      * Constructor of OLC objects; for internal use only.
      * @param string $code The string representation of the Open Location code.
@@ -112,7 +115,15 @@ final class OpenLocationCode
         }
         // Ensure that latitude and longitude are valid.
         $latitude = self::clipLatitude($latitude);
-        // longitude wip
+        $longitude = self::normalizeLongitude($longitude);
+
+        // Latitude 90 needs to be adjusted to be just less, so the returned code can also be decoded.
+        if ($latitude == self::LATITUDE_MAX) {
+            $latitude = $latitude - 0.9 * self::computeLatitudePrecision($codeLength);
+        }
+
+        // PHP has native support for string concatenation, and string reversal is quite fast.
+        $revCode = "";
 
         throw new InvalidArgumentException("implementation not done yet");
     }
@@ -223,5 +234,34 @@ final class OpenLocationCode
     private static function clipLatitude(float $latitude): float
     {
         return min(max($latitude, -self::LATITUDE_MAX), self::LATITUDE_MAX);
+    }
+
+    private static function normalizeLongitude(float $longitude): float
+    {
+        if ($longitude >= -self::LONGITUDE_MAX && $longitude < self::LONGITUDE_MAX) {
+            return $longitude;
+        }
+
+        // fmod() in PHP uses floored division where the remainder is always positive
+        // to indicate the positive offset from the dividend.
+        // Therefore, we can normalize any input longitude according to these steps:
+        // 1. Shift periodical [-180, 180) to become periodical [0, 360)
+        // 2. Apply fmod(?, 360) to remove the periodicity
+        // 3. Shift [0, 360) to [-180, 180)
+        // 4. Normalization complete
+        return fmod($longitude + self::LONGITUDE_MAX, self::CIRCLE_DEG) - self::LONGITUDE_MAX;
+    }
+
+    /**
+     * Compute the latitude precision value for a given code length. Lengths <= 10 have the same
+     * precision for latitude and longitude, but lengths > 10 have different precisions due to the
+     * grid method having fewer columns than rows. Copied from the JS implementation.
+     */
+    private static function computeLatitudePrecision(int $codeLength): float
+    {
+        if ($codeLength <= self::CODE_PRECISION_NORMAL) {
+            return pow(self::ENCODING_BASE, intdiv($codeLength, -2) + 2);
+        }
+        return pow(self::ENCODING_BASE, -3) / pow(self::GRID_ROWS, $codeLength - self::PAIR_CODE_LENGTH);
     }
 }
