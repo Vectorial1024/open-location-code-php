@@ -93,6 +93,30 @@ final class OpenLocationCode
         return new self(strtoupper($code));
     }
 
+    /**
+     * Creates Open Location Code with default/custom precision length.
+     * 
+     * @param float $latitude The latitude in decimal degrees.
+     * @param float $longitude The longitude in decimal degrees.
+     * @param int $codeLength The desired number of digits in the code; leave blank for a default value.
+     * @return self The created OLC object.
+     * @throws InvalidArgumentException when the code length is invalid.
+     */
+    public static function createFromCoordinates(float $latitude, float $longitude, int $codeLength = self::CODE_PRECISION_NORMAL): self
+    {
+        // Limit the maximum number of digits in the code.
+        $codeLength = min($codeLength, self::MAX_DIGIT_COUNT);
+        // Check that the code length requested is valid.
+        if ($codeLength < self::PAIR_CODE_LENGTH && $codeLength % 2 == 1 || $codeLength < 4) {
+            throw new InvalidArgumentException("Illegal code length $codeLength");
+        }
+        // Ensure that latitude and longitude are valid.
+        $latitude = self::clipLatitude($latitude);
+        // longitude wip
+
+        throw new InvalidArgumentException("implementation not done yet");
+    }
+
     // ---
 
     /**
@@ -190,5 +214,14 @@ final class OpenLocationCode
     public function isValid(): bool
     {
         return self::isValidCode($this->code);
+    }
+
+    // ---
+
+    // internal static methods
+
+    private static function clipLatitude(float $latitude): float
+    {
+        return min(max($latitude, -self::LATITUDE_MAX), self::LATITUDE_MAX);
     }
 }
