@@ -5,6 +5,8 @@ But still, a short quote from said repository to introduce Open Location Code (O
 
 > Open Location Code is a technology that gives a way of encoding location into a form that is easier to use than latitude and longitude. The codes generated are called plus codes, as their distinguishing attribute is that they include a "+" character.
 
+An [external demo](https://plus.codes/map) is available to showcase the functionality of Open Lcation Code.
+
 ## Implementation notes
 This PHP implementation is adapted from the [Java implementation](https://github.com/google/open-location-code/tree/main/java) of `google/open-location-code`.
 
@@ -28,13 +30,13 @@ Special notice: this library requires a 64-bit PHP runtime because some Open Loc
 use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
 
 // This code snippet will center around King's Cross station in London, UK.
-// Its main entrance at (51.530812, -0.123767) has the Open Location Code of "9C3XGVJG+8FH".
+// Its main entrance at (51.530812, -0.123767) has the Open Location Code of "9C3XGVJG+8F".
 
 $invalidCode = "11iL!Illi1!!!";
 
 $kingsCrossLatitude = 51.530812;
 $kingsCrossLongitude = -0.123767;
-$kingsCrossCode = "9C3XGVJG+8FH";
+$kingsCrossCode = "9C3XGVJG+8F";
 
 // test validity of the code
 $validity = OpenLocationCode::isValidCode($invalidCode); // invalid code; returns false

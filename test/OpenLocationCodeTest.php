@@ -31,7 +31,7 @@ class OpenLocationCodeTest extends TestCase
         // test King's Cross for now; later may expand to see more test cases
         $kingsCrossLat = 51.530812;
         $kingsCrossLng = -0.123767;
-        $kingsCrossCode = "9C3XGVJG+8FH";
+        $kingsCrossCode = "9C3XGVJG+8F";
 
         $codeObject = OpenLocationCode::createFromCoordinates($kingsCrossLat, $kingsCrossLng);
         $this->assertEquals($kingsCrossCode, $codeObject->code);
@@ -44,7 +44,7 @@ class OpenLocationCodeTest extends TestCase
             "Empty code" => ["", false],
             "Code too short" => ["B", false],
 
-            "London King's Cross, London" => ["9C3XGVJG+8FH", true],
+            "London King's Cross, London" => ["9C3XGVJG+8F", true],
         ];
     }
 }
