@@ -185,6 +185,22 @@ final class OpenLocationCode
     // ---
 
     /**
+     * Encodes latitude/longitude into Open Location Code of provided length (default is 10 digit).
+     * This method is equivalent to creating the OpenLocationCode object and getting the code from it.
+     * 
+     * @param float $latitude The latitude in decimal degrees.
+     * @param float $longitude The longitude in decimal degrees.
+     * @param int $codeLength The number of digits in the returned code (omit for default length).
+     * @return string The code.
+     */
+    public static function encode(float $latitude, float $longitude, int $codeLength = self::CODE_PRECISION_NORMAL): string
+    {
+        return self::createFromCoordinates($latitude, $longitude, $codeLength)->code;
+    }
+
+    // ---
+
+    /**
      * Returns whether the provided string is a valid Open Location code.
      * 
      * @param string $code The code to check.
