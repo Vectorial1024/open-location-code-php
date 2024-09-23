@@ -45,6 +45,18 @@ $validity = OpenLocationCode::isValidCode($kingsCrossCode); // valid code; retur
 // create object from code
 $invalidObject = OpenLocationCode::createFromCode($invalidCode); // invalid code; throws InvalidArgumentException
 $validObject = OpenLocationCode::createFromCode($kingsCrossCode); // returns OpenLocationCode instance
+// alternatively, create object from coordinates
+$anotherValidObject = OpenLocationCode::createFromCoordinates($kingsCrossLatitude, $kingsCrossLongitude); // returns OpenLocationCode instance
+
+// you may check the code is valid
+$validity = $validObject->isValid(); // returns true
+$validity = $anotherValidObject->isValid(); // also returns true
+// you may also read the code...
+assert($kingsCrossCode == $validObject->code); // passes
+// ...to know that both methods result in the same code
+assert($validObject->code == $anotherValidObject->code); // also passes
+// but you may not modify the code (create a new instance instead!)
+$validObject->code = "something else"; // PHP runtime error: $code is read-only
 ```
 
 ### Other references
