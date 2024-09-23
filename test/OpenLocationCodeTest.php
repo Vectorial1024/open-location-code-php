@@ -26,6 +26,17 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
+    public function testCorrectCodeFromCordinates()
+    {
+        // test King's Cross for now; later may expand to see more test cases
+        $kingsCrossLat = 51.530812;
+        $kingsCrossLng = -0.123767;
+        $kingsCrossCode = "9C3XGVJG+8FH";
+
+        $codeObject = OpenLocationCode::createFromCoordinates($kingsCrossLat, $kingsCrossLng);
+        $this->assertEquals($kingsCrossCode, $codeObject->code);
+    }
+
     public static function codeValidityProvider(): array
     {
         return [

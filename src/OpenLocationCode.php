@@ -125,7 +125,61 @@ final class OpenLocationCode
         // PHP has native support for string concatenation, and string reversal is quite fast.
         $revCode = "";
 
-        throw new InvalidArgumentException("implementation not done yet");
+        // Compute the code.
+        // The idea of this approach is to convert each value to an integer 
+        // after multiplying it by the final precision. 
+        // This allows us to use only integer operations, so
+        // avoiding any accumulation of floating point representation errors.
+        // However, it must also be noted that the calculation may poduce 10-digit integers
+        // that begins with 6, which overflows the 32-bit PHP int type.
+        // The good news is, this relatively small bignum can be precisely represented
+        // by the double-precision float type. We just need to be careful when calculating.
+
+        // Multiply values by their precision and convert to positive.
+        // Rounding avoids/minimizes errors due to floating-point precision.
+        // Since the numbers are positive, floor() is equivalent to intval().
+        $latVal = floor(round(($latitude + self::LATITUDE_MAX) * self::LAT_INTEGER_MULTIPLIER * 1e6) / 1e6);
+        $lngVal = floor(round(($longitude + self::LONGITUDE_MAX) * self::LNG_INTEGER_MULTIPLIER * 1e6) / 1e6);
+
+        // Compute the grid part of the code if necessary.
+        if ($codeLength > self::PAIR_CODE_LENGTH) {
+            for ($i = 0; $i < self::GRID_CODE_LENGTH; $i++) {
+                $latDigit = (int) fmod($latVal, self::GRID_ROWS);
+                $lngDigit = (int) fmod($lngVal, self::GRID_COLUMNS);
+                $ndx = $latDigit * self::GRID_COLUMNS + $lngDigit;
+                $revCode .= self::CODE_ALPHABET[$ndx];
+                $latVal = floor($latVal / self::GRID_ROWS);
+                $lngVal = floor($lngVal / self::GRID_COLUMNS);
+            }
+            unset($i, $latDigit, $lngDigit, $ndx);
+        } else {
+            $latVal = floor($latVal / pow(self::GRID_ROWS, self::GRID_CODE_LENGTH));
+            $lngVal = floor($lngVal / pow(self::GRID_COLUMNS, self::GRID_CODE_LENGTH));
+        }
+
+        // Compute the pair section of the code.
+        for ($i = 0; $i < intdiv(self::PAIR_CODE_LENGTH, 2); $i++) {
+            $revCode .= self::CODE_ALPHABET[(int) fmod($lngVal, self::ENCODING_BASE)];
+            $revCode .= self::CODE_ALPHABET[(int) fmod($latVal, self::ENCODING_BASE)];
+            $latVal = floor($latVal / self::ENCODING_BASE);
+            $lngVal = floor($lngVal / self::ENCODING_BASE);
+            // If we are at the separator position, add the separator
+            if ($i == 0) {
+                $revCode .= self::SEPARATOR;
+            }
+        }
+        unset($i);
+        // Reverse the code
+        $code = strrev($revCode);
+
+        // If we need to pad the code, replace some of the digits.
+        if ($codeLength < self::SEPARATOR_POSITION) {
+            for ($i = $codeLength; $i < self::SEPARATOR_POSITION; $i++) {
+                $code[$i] = self::PADDING_CHARACTER;
+            }
+        }
+        $finalCode = substr($code, 0, max(self::SEPARATOR_POSITION + 1, $codeLength + 1));
+        return new self($finalCode);
     }
 
     // ---
