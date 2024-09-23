@@ -3,13 +3,14 @@
 namespace Vectorial1024\OpenLocationCodePhp;
 
 use InvalidArgumentException;
+use Stringable;
 
 /**
  * An object representing an Open Location Code (OLC).
  * 
  * Create OLC objects first, then use the instance methods for other calculations.
  */
-final class OpenLocationCode
+final class OpenLocationCode implements Stringable
 {
     // Provides a normal precision code, approximately 14x14 meters.
     public const int CODE_PRECISION_NORMAL = 10;
@@ -286,6 +287,11 @@ final class OpenLocationCode
         }
 
         return true;
+    }
+
+    public function __toString(): string
+    {
+        return $this->code;
     }
 
     /**

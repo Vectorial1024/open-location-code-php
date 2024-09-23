@@ -53,6 +53,8 @@ $validity = $validObject->isValid(); // returns true
 $validity = $anotherValidObject->isValid(); // also returns true
 // you may also read the code...
 assert($kingsCrossCode == $validObject->code); // passes
+$code = (string) $validObject; // also, can be explicitly casted to string
+assert($kingsCrossCode == $code); // passes
 // ...to know that both methods result in the same code
 assert($validObject->code == $anotherValidObject->code); // also passes
 // but you may not modify the code (create a new instance instead!)
