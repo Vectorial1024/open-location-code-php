@@ -19,7 +19,7 @@ class OpenLocationCodeTest extends TestCase
         // also tests the behavior of code creation because it is highly relevant.
         if ($isValid) {
             $theObject = OpenLocationCode::createFromCode($testCode);
-            $this->assertNotNull($theObject);
+            $this->assertTrue($theObject->isValid());
         } else {
             $this->expectException(InvalidArgumentException::class);
             $theObject = OpenLocationCode::createFromCode($testCode);
