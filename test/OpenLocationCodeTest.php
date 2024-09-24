@@ -26,7 +26,7 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
-    public function testCorrectCodeFromCordinates()
+    public function testCorrectCodeFromCoordinates()
     {
         // test King's Cross for now; later may expand to see more test cases
         $kingsCrossLat = 51.530812;
