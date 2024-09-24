@@ -303,6 +303,35 @@ final class OpenLocationCode implements Stringable
         return self::isValidCode($this->code);
     }
 
+    /**
+     * Returns whether this object is a full Open Lcation Code.
+     * @return bool True if it is a full code.
+     */
+    public function isFull(): bool
+    {
+        return strpos($this->code, self::SEPARATOR) == self::SEPARATOR_POSITION;
+    }
+
+    /**
+     * Returns whether this bject is a short Open Location Code.
+     * @return bool True if it is a short code.
+     */
+    public function isShort(): bool
+    {
+        $separatorPosition = strpos($this->code, self::SEPARATOR);
+        return $separatorPosition !== false && $separatorPosition < self::SEPARATOR_POSITION;
+    }
+
+    /**
+     * Returns whether this object is a padded Open Location Coe, meaning that
+     * it conntains less than 8 valid digits.
+     * @return bool True if this code is padded.
+     */
+    public function isPadded(): bool
+    {
+        return str_contains($this->code, self::PADDING_CHARACTER);
+    }
+
     // ---
 
     // internal static methods
