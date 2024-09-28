@@ -3,6 +3,7 @@
 namespace Vectorial1024\OpenLocationCodePhp;
 
 use InvalidArgumentException;
+use LogicException;
 use Stringable;
 
 /**
@@ -61,10 +62,12 @@ final class OpenLocationCode implements Stringable
     private const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
 
     // Value of the most significant latitude digit after it has been converted to an integer.
-    private const int LAT_MSP_VALUE = self::LAT_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
+    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
+    private const float LAT_MSP_VALUE = self::LAT_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
 
     // Value of the most significant longitude digit after it has been converted to an integer.
-    private const int LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
+    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
+    private const float LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
 
     // The 360 degree circle information to normalize longitudes.
     private const int CIRCLE_DEG = 2 * self::LONGITUDE_MAX;
@@ -197,6 +200,57 @@ final class OpenLocationCode implements Stringable
     public static function encode(float $latitude, float $longitude, int $codeLength = self::CODE_PRECISION_NORMAL): string
     {
         return self::createFromCoordinates($latitude, $longitude, $codeLength)->code;
+    }
+
+    /**
+     * Decodes this object into a CodeArea object encapsulating latitude/longitude bounding box.
+     * @return void
+     */
+    public function decode(): CodeArea
+    {
+        if (!$this->isFull()) {
+            throw new LogicException("Method decode() may only be called on valid full codes, but code was {$this->code}.");
+        }
+        // Strip padding and separator characters out of the code.
+        $clean = str_replace([self::SEPARATOR, self::PADDING_CHARACTER], "", $this->code);
+
+        // Initialize the values. 
+        // We will assume these values are floats to ensure 32bit PHP compatibility.
+        // See relevant comments in encode() above.
+        $latVal = -self::LATITUDE_MAX * self::LAT_INTEGER_MULTIPLIER;
+        $lngVal = -self::LONGITUDE_MAX * self::LNG_INTEGER_MULTIPLIER;
+        // Define the place value for the digits. We'll divide this down as we work through the code.
+        $latPlaceVal = self::LAT_MSP_VALUE;
+        $lngPlaceVal = self::LNG_MSP_VALUE;
+        for ($i = self::PAIR_CODE_LENGTH; $i < min(strlen($clean), self::MAX_DIGIT_COUNT); $i += 2) {
+            $latPlaceVal = floor($latPlaceVal / self::ENCODING_BASE);
+            $lngPlaceVal = floor($lngPlaceVal / self::ENCODING_BASE);
+            $latVal += strpos(self::CODE_ALPHABET, $clean[$i]) * $latPlaceVal;
+            $lngVal = strpos(self::CODE_ALPHABET, $clean[$i + 1]) * $lngPlaceVal;
+        }
+        unset($i);
+        for ($i = self::PAIR_CODE_LENGTH; $i < min(strlen($clean), self::MAX_DIGIT_COUNT); $i++) {
+            $latPlaceVal = floor($latPlaceVal / self::GRID_ROWS);
+            $lngPlaceVal = floor($lngPlaceVal / self::GRID_COLUMNS);
+            $digit = strpos(self::CODE_ALPHABET, $clean[$i]);
+            $row = intdiv($digit, self::GRID_COLUMNS);
+            $col = $digit % self::GRID_COLUMNS;
+            $latVal += $row * $latPlaceVal;
+            $lngVal += $col * $lngPlaceVal;
+            unset($digit);
+        }
+        unset($i);
+        $latitudeLo = $latVal / self::LAT_INTEGER_MULTIPLIER;
+        $longitudeLo = $lngVal / self::LNG_INTEGER_MULTIPLIER;
+        $latitudeHi = ($latVal + $latPlaceVal) / self::LAT_INTEGER_MULTIPLIER;
+        $longitudeHi = ($lngVal + $lngPlaceVal) / self::LNG_INTEGER_MULTIPLIER;
+        return new CodeArea(
+            $latitudeLo,
+            $longitudeLo,
+            $latitudeHi,
+            $longitudeHi,
+            min(strlen($clean), self::MAX_DIGIT_COUNT),
+        );
     }
 
     // ---
