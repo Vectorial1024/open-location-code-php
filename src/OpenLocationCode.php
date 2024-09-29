@@ -290,6 +290,57 @@ final class OpenLocationCode implements Stringable
         throw new InvalidArgumentException("Reference location is too far from the Open Location Code center.");
     }
 
+    /**
+     * Returns an Open Location Code object representing a full Open Location Code from this
+     * (short) Open Location Code, given the reference location.
+     *
+     * @param float $referenceLatitude The reference latitude in degrees.
+     * @param float $referenceLongitude The reference longitude in degrees.
+     * @return self The nearest matching full code.
+     */
+    public function recover(float $referenceLatitude, float $referenceLongitude): self
+    {
+        if ($this->isFull()) {
+            // Note: each code is either full xor short, no other option.
+            return $this;
+        }
+        $referenceLatitude = self::clipLatitude($referenceLatitude);
+        $referenceLongitude = self::normalizeLongitude($referenceLongitude);
+
+        $digitsToRecover = self::SEPARATOR_POSITION - strpos($this->code, self::SEPARATOR);
+        // The precision (height and width) of the missing prefix in degrees.
+        $prefixPrecision = pow(self::ENCODING_BASE, 2 - intdiv($digitsToRecover, 2));
+
+        // Use the reference location to generate the prefix.
+        $recoveredPrefix = substr(self::createFromCoordinates($referenceLatitude, $referenceLongitude)->code, 0, $digitsToRecover);
+        // Combine the prefix with the short code and decode it.
+        $recovered = new self($recoveredPrefix . $this->code);
+        $recoveredCodeArea = $recovered->decode();
+        // Work out whether the new code area is too far from the reference location. If it is, we
+        // move it. It can only be out by a single precision step.
+        $recoveredLatitude = $recoveredCodeArea->getCenterLatitude();
+        $recoveredLongitude = $recoveredCodeArea->getCenterLongitude();
+
+        // Move the recovered latitude by one precision up or down if it is too far from the reference,
+        // unless doing so would lead to an invalid latitude.
+        $latitudeDiff = $recoveredLatitude - $referenceLatitude;
+        if ($latitudeDiff > $prefixPrecision / 2 && $recoveredLatitude - $prefixPrecision > -self::LATITUDE_MAX) {
+            $recoveredLatitude -= $prefixPrecision;
+        } elseif ($latitudeDiff < -$prefixPrecision / 2 && $recoveredLatitude + $prefixPrecision < self::LATITUDE_MAX) {
+            $recoveredLatitude += $prefixPrecision;
+        }
+
+        // Move the recovered longitude by one precision up or down if it is too far from the reference.
+        $longitudeDiff = $recoveredCodeArea->getCenterLongitude() - $referenceLongitude;
+        if ($longitudeDiff > $prefixPrecision / 2) {
+            $recoveredLongitude -= $prefixPrecision;
+        } elseif ($longitudeDiff < -$prefixPrecision / 2) {
+            $recoveredLongitude += $prefixPrecision;
+        }
+
+        return self::createFromCoordinates($recoveredLatitude, $recoveredLongitude, strlen($recovered->code) - 1);
+    }
+
     // ---
 
     /**
