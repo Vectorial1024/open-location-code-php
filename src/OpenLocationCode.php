@@ -253,6 +253,43 @@ final class OpenLocationCode implements Stringable
         );
     }
 
+    /**
+     * Returns short Open Location Code from the full Open Location Code created by removing four or six digits,
+     * depending on the provided reference poi9nt. It removes as many digits as possible.
+     * 
+     * @param float $referenceLatitude The reference latitude in degrees.
+     * @param float $referenceLongitude The reference longitude in degrees.
+     * @return self A short code if possible.
+     */
+    public function shorten(float $referenceLatitude, float $referenceLongitude): self
+    {
+        if (!$this->isFull()) {
+            throw new LogicException("shorten() method may only be called on a full code.");
+        }
+        if ($this->isPadded()) {
+            throw new LogicException("shorten() method may not be called on a padded code.");
+        }
+
+        $codeArea = $this->decode();
+        $range = max(
+            abs($referenceLatitude - $codeArea->getCenterLatitude()),
+            abs($referenceLongitude - $codeArea->getCenterLongitude())
+        );
+        // We are going to check to see if we can remove three pairs, two pairs or just one pair of
+        // digits from the code.
+        for ($i = 4; $i >= 1; $i--) {
+            // Check if we're close enough to shorten. The range must be less than 1/2
+            // the precision to shorten at all, and we want to allow some safety, so
+            // use 0.3 instead of 0.5 as a multiplier.
+            if ($range < (self::computeLatitudePrecision($i * 2) * 0.3)) {
+                // We're done.
+                return new self(substr($this->code, 0, $i * 2));
+            }
+        }
+        unset($i);
+        throw new InvalidArgumentException("Reference location is too far from the Open Location Code center.");
+    }
+
     // ---
 
     /**
