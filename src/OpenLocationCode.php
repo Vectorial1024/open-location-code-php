@@ -283,7 +283,7 @@ final class OpenLocationCode implements Stringable
             // use 0.3 instead of 0.5 as a multiplier.
             if ($range < (self::computeLatitudePrecision($i * 2) * 0.3)) {
                 // We're done.
-                return new self(substr($this->code, 0, $i * 2));
+                return new self(substr($this->code, $i * 2));
             }
         }
         unset($i);
