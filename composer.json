@@ -1,6 +1,6 @@
 {
     "name": "vectorial1024/open-location-code-php",
-    "description": "A modern Open Location Code implementation in PHP.",
+    "description": "Open Location Code (aka \"Plus Code\") implemented in PHP",
     "keywords": [
         "open-location-code",
         "plus-code",

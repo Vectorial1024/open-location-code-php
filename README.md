@@ -1,5 +1,5 @@
 # open-location-code-php
-This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about Open Location Code itself. This repository only concerns the PHP implementation.
+This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about Open Location Code (aka "Plus Code") itself. This repository only concerns the PHP implementation.
 
 But still, a short quote from said repository to introduce Open Location Code (OLC):
 
