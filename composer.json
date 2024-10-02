@@ -1,6 +1,11 @@
 {
     "name": "vectorial1024/open-location-code-php",
     "description": "A modern Open Location Code implementation in PHP.",
+    "keywords": [
+        "open-location-code",
+        "plus-code",
+        "geo"
+    ],
     "type": "library",
     "license": "Apache-2.0",
     "autoload": {
