@@ -67,7 +67,7 @@ $validObject->code = "something else"; // PHP runtime error: $code is read-only
 via PHPUnit; first ensure PHPUnit has been set up correctly:
 
 ```sh
-composer install
+composer update
 ```
 
 Then:
