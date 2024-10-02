@@ -253,6 +253,11 @@ final class OpenLocationCode implements Stringable
         );
     }
 
+    public function __toString(): string
+    {
+        return $this->code;
+    }
+
     /**
      * Returns short Open Location Code from the full Open Location Code created by removing four or six digits,
      * depending on the provided reference poi9nt. It removes as many digits as possible.
@@ -445,11 +450,6 @@ final class OpenLocationCode implements Stringable
         }
 
         return true;
-    }
-
-    public function __toString(): string
-    {
-        return $this->code;
     }
 
     /**
