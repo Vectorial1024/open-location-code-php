@@ -17,9 +17,12 @@ Licence follows `google/open-location-code`.
 ## Installation
 via Composer:
 
-(WIP)
+```sh
+composer require vectorial1024/open-location-code-php
+```
 
-Special notice: this library requires a 64-bit PHP runtime because some Open Location Code calculation may exceed the 32-bit integer limit. (Subject to review.)
+**Special Notice**: to ensure 32-bit PHP compatibility, this library uses `float` variables instead of `int` variables to handle Open Location Codes.
+This may cause inaccuracies in some unforseen edge cases, but generally speaking, there should be no problems.
 
 ## Example code
 (WIP)
