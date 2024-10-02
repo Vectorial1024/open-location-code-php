@@ -25,7 +25,6 @@ composer require vectorial1024/open-location-code-php
 This may cause inaccuracies in some unforseen edge cases, but generally speaking, there should be no problems.
 
 ## Example code
-(WIP)
 
 ### Checking and creating OLC codes
 
