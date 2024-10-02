@@ -10,7 +10,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Vectorial1024\\OpenLocationCodePhp\\Test": "test/"
+            "Vectorial1024\\OpenLocationCodePhp\\Test\\": "test/"
         }
     },
     "authors": [
