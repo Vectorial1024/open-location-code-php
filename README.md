@@ -1,4 +1,9 @@
 # open-location-code-php
+![Packagist License](https://img.shields.io/packagist/l/vectorial1024/open-location-code-php?style=plastic)
+![Packagist Version](https://img.shields.io/packagist/v/vectorial1024/open-location-code-php?style=plastic)
+![Packagist Downloads](https://img.shields.io/packagist/dm/vectorial1024/open-location-code-php?style=plastic)
+![PHP Dependency Version](https://img.shields.io/packagist/dependency-v/vectorial1024/open-location-code-php/php?style=plastic&label=PHP)
+
 This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about **Open Location Code ("OLC", aka "Plus Code")** itself. This repository only concerns the PHP implementation.
 
 But still, a short quote from said repository to introduce Open Location Code (OLC):
