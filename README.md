@@ -97,7 +97,7 @@ class OpenLocationCode implememts Stringable
 }
 ```
 
-**CodeArea**
+**CodeArea**:
 
 ```php
 /* Vectorial1024\OpenLocationCodePhp\CodeArea */
