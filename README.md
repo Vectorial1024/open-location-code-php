@@ -66,6 +66,59 @@ $validObject->code = "something else"; // PHP runtime error: $code is read-only
 
 ### Other references
 
+A quick reference of available classes/methods; please see the PHPDoc for details.
+
+**OpenLocationCode**:
+
+```php
+/* Vectorial1024\OpenLocationCodePhp\OpenLocationCode */
+
+class OpenLocationCode implememts Stringable
+{
+    public readonly string $code;
+    // The explicit string cast gives $this->code;
+
+    public const int CODE_PRECISION_NORMAL = 10;
+    
+    public static function createFromCode(string $code): self;
+    public static function createFromCoordinates(float $latitude, float $longitude, int $codeLength = self::CODE_PRECISION_NORMAL): self;
+    public static function encode(float $latitude, float $longitude, int $codeLength = self::CODE_PRECISION_NORMAL): string;
+    public function decode(): Vectorial1024\OpenLocationCodePhp\CodeArea;
+
+    public function shorten(float $referenceLatitude, float $referenceLongitude): self;
+    public function recover(float $referenceLatitude, float $referenceLongitude): self;
+
+    public function contains(float $latitude, float $longitude): bool;
+
+    public static function isValidCode(string $code): bool;
+    public function isValid(): bool;
+    public function isFull(): bool;
+    public function isShort(): bool;
+    public function isPadded(): bool;
+}
+```
+
+**CodeArea**
+
+```php
+/* Vectorial1024\OpenLocationCodePhp\CodeArea */
+
+class CodeArea
+{
+    public readonly float $southLatitude;
+    public readonly float $westLongitude;
+    public readonly float $northLatitude;
+    public readonly float $eastLongitude;
+    public readonly int $length;
+
+    public function getLatitudeHeight(): float;
+    public function getLongitudeWidth(): float;
+
+    public function getCenterLatitude(): float;
+    public function getCenterLongitude(): float;
+}
+```
+
 ## Testing
 via PHPUnit; first ensure PHPUnit has been set up correctly:
 
