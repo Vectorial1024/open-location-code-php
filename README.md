@@ -133,5 +133,5 @@ composer update
 Then:
 
 ```sh
-./vendor/bin/phpunit test
+composer run-script test
 ```
