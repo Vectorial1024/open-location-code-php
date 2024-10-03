@@ -26,15 +26,13 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
-    public function testCorrectCodeFromCoordinates()
+    #[DataProvider('encodingProvider')]
+    public function testCorrectCodeFromCoordinates(float $latitude, float $longitude, string $expectedCode)
     {
-        // test King's Cross for now; later may expand to see more test cases
-        $kingsCrossLat = 51.530812;
-        $kingsCrossLng = -0.123767;
-        $kingsCrossCode = "9C3XGVJG+8F";
-
-        $codeObject = OpenLocationCode::createFromCoordinates($kingsCrossLat, $kingsCrossLng);
-        $this->assertEquals($kingsCrossCode, $codeObject->code);
+        $codeObject = OpenLocationCode::createFromCoordinates($latitude, $longitude);
+        $this->assertEquals($expectedCode, $codeObject->code);
+        // while OLC represents an area via lossful encoding, at least the area should contain the original point
+        $this->assertTrue($codeObject->contains($latitude, $longitude));
     }
 
     public static function codeValidityProvider(): array
@@ -45,6 +43,20 @@ class OpenLocationCodeTest extends TestCase
             "Code too short" => ["B", false],
 
             "London King's Cross, London" => ["9C3XGVJG+8F", true],
+        ];
+    }
+
+    public static function encodingProvider(): array
+    {
+        // latitude, longitude, expected code (check the external demo)
+        return [
+            "London King's Cross, London" => [51.530812, -0.123767, "9C3XGVJG+8F"],
+            "Changi Airport, Singapore" => [1.357063, 103.988563, "6PH59X4Q+RC"],
+            "International Antarctic Centre, Christchurch" => [-43.489063, 172.547188, "4V8JGG6W+9V"],
+            "Christo Redentor, Rio de Janeiro" => [-22.951937, -43.210437, "589R2QXQ+6R"],
+            "New Chitose Airport, Chitose" => [42.786062,141.680937, "8RJ3QMPJ+C9"],
+            "Berling Strait" => [65.759937, -169.149437, "92QGQV52+X6"],
+            "Null point" => [0, 0, "6FG22222+22"],
         ];
     }
 }
