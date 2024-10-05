@@ -1,9 +1,9 @@
 # open-location-code-php
-![Packagist License][packagist-license-image][packagist-url]
-![Packagist Version][packagist-version-image][packagist-url]
-![Packagist Downloads][packagist-downloads-image][packagist-stats-url]
-![PHP Dependency Version][php-version-image][]
-![GitHub Actions Workflow Status][php-build-status-image][]
+[![Packagist License][packagist-license-image]][packagist-url]
+[![Packagist Version][packagist-version-image]][packagist-url]
+[![Packagist Downloads][packagist-downloads-image]][packagist-stats-url]
+[![PHP Dependency Version][php-version-image]][]
+[![GitHub Actions Workflow Status][php-build-status-image]][]
 
 This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about **Open Location Code ("OLC", aka "Plus Code")** itself. This repository only concerns the PHP implementation.
 
