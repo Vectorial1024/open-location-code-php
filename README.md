@@ -1,9 +1,9 @@
 # open-location-code-php
-![Packagist License](https://img.shields.io/packagist/l/vectorial1024/open-location-code-php?style=plastic)
-![Packagist Version](https://img.shields.io/packagist/v/vectorial1024/open-location-code-php?style=plastic)
-![Packagist Downloads](https://img.shields.io/packagist/dm/vectorial1024/open-location-code-php?style=plastic)
-![PHP Dependency Version](https://img.shields.io/packagist/dependency-v/vectorial1024/open-location-code-php/php?style=plastic&label=PHP)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Vectorial1024/open-location-code-php/php.yml?style=plastic)
+![Packagist License][packagist-license-image]
+![Packagist Version][packagist-version-image]
+![Packagist Downloads][packagist-downloads-image]
+![PHP Dependency Version][php-version-image]
+![GitHub Actions Workflow Status][php-build-status-image]
 
 This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about **Open Location Code ("OLC", aka "Plus Code")** itself. This repository only concerns the PHP implementation.
 
@@ -136,3 +136,9 @@ Then:
 ```sh
 composer run-script test
 ```
+
+[packagist-license-image]: https://img.shields.io/packagist/l/vectorial1024/open-location-code-php?style=plastic
+[packagist-version-image]: https://img.shields.io/packagist/v/vectorial1024/open-location-code-php?style=plastic
+[packagist-downloads-image]: https://img.shields.io/packagist/dm/vectorial1024/open-location-code-php?style=plastic
+[php-version-image]: https://img.shields.io/packagist/dependency-v/vectorial1024/open-location-code-php/php?style=plastic&label=PHP
+[php-build-status-image]: https://img.shields.io/github/actions/workflow/status/Vectorial1024/open-location-code-php/php.yml?style=plastic
