@@ -44,7 +44,7 @@ readonly class CodeArea
      * 
      * @param float $latitude The provided latitude in degrees.
      * @param float $longitude The provided longitude in degrees.
-     * @return bool True if tge coordinates are contained by the code area.
+     * @return bool True if the coordinates are contained by the code area.
      */
     public function contains(float $latitude, float $longitude): bool
     {

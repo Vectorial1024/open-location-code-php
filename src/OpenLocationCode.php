@@ -353,7 +353,7 @@ final class OpenLocationCode implements Stringable
      * 
      * @param float $latitude The provided latitude in degrees.
      * @param float $longitude The provided longitude in degrees.
-     * @return bool True if tge coordinates are contained by the code.
+     * @return bool True if the coordinates are contained by the code.
      */
     public function contains(float $latitude, float $longitude): bool
     {
