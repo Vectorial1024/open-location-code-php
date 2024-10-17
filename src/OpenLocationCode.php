@@ -349,6 +349,8 @@ final class OpenLocationCode implements Stringable
     /**
      * Returns whether the bounding box specified by the Open Location Code contains the provided point.
      * 
+     * @see CodeArea::contains() for the underlying implementation.
+     * 
      * @param float $latitude The provided latitude in degrees.
      * @param float $longitude The provided longitude in degrees.
      * @return bool True if tge coordinates are contained by the code.
@@ -356,10 +358,7 @@ final class OpenLocationCode implements Stringable
     public function contains(float $latitude, float $longitude): bool
     {
         $codeArea = $this->decode();
-        return $codeArea->southLatitude <= $latitude
-            && $latitude < $codeArea->northLatitude
-            && $codeArea->westLongitude <= $longitude
-            && $longitude < $codeArea->eastLongitude;
+        return $codeArea->contains($latitude, $longitude);
     }
 
     // ---

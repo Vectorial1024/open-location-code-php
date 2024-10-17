@@ -38,4 +38,19 @@ readonly class CodeArea
     {
         return ($this->eastLongitude + $this->westLongitude) / 2;
     }
+
+    /**
+     * Returns whether the bounding box specified by the code area (from a decoded Open Location Code) contains the provided point.
+     * 
+     * @param float $latitude The provided latitude in degrees.
+     * @param float $longitude The provided longitude in degrees.
+     * @return bool True if tge coordinates are contained by the code area.
+     */
+    public function contains(float $latitude, float $longitude): bool
+    {
+        return $this->southLatitude <= $latitude
+            && $latitude < $this->northLatitude
+            && $this->westLongitude <= $longitude
+            && $longitude < $this->eastLongitude;
+    }
 }
