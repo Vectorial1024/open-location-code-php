@@ -94,6 +94,7 @@ class OpenLocationCode implememts Stringable
     public function recover(float $referenceLatitude, float $referenceLongitude): self;
 
     public function contains(float $latitude, float $longitude): bool;
+    // note: if you need to call contains() many times on the same $this, consider decoding $this first, and then call contains() on the resulting CodeArea instance
 
     public static function isValidCode(string $code): bool;
     public function isValid(): bool;
@@ -121,6 +122,8 @@ class CodeArea
 
     public function getCenterLatitude(): float;
     public function getCenterLongitude(): float;
+
+    public function contains(float $latitude, float $longitude): float;
 }
 ```
 
