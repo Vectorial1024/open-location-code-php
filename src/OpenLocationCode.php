@@ -5,6 +5,7 @@ namespace Vectorial1024\OpenLocationCodePhp;
 use InvalidArgumentException;
 use LogicException;
 use Stringable;
+use Vectorial1024\OpenLocationCodePhp\CodeCalculator\AbstractCodeCalculator;
 
 /**
  * An object representing an Open Location Code (OLC).
@@ -26,40 +27,40 @@ final class OpenLocationCode implements Stringable
     public const string PADDING_CHARACTER = '0';
 
     // The number of characters to place before the separator.
-    private const int SEPARATOR_POSITION = 8;
+    public const int SEPARATOR_POSITION = 8;
 
     // The max number of digits to process in a plus code.
     public const int MAX_DIGIT_COUNT = 15;
 
     // Maximum code length using just lat/lng pair encoding.
-    private const int PAIR_CODE_LENGTH = 10;
+    public const int PAIR_CODE_LENGTH = 10;
 
     // Number of digits in the grid coding section.
-    private const int GRID_CODE_LENGTH = self::MAX_DIGIT_COUNT - self::PAIR_CODE_LENGTH;
+    public const int GRID_CODE_LENGTH = self::MAX_DIGIT_COUNT - self::PAIR_CODE_LENGTH;
 
     // The base to use to convert numbers to/from.
     // Note: since PHP cannot initialize constants just like in Java, we cannot easily ensure this number is correct.
-    private const int ENCODING_BASE = 20;
+    public const int ENCODING_BASE = 20;
 
     // The maximum value for latitude in degrees.
-    private const int LATITUDE_MAX = 90;
+    public const int LATITUDE_MAX = 90;
 
     // The maximum value for longitude in degrees.
-    private const int LONGITUDE_MAX = 180;
+    public const int LONGITUDE_MAX = 180;
 
     // Number of columns in the grid refinement method.
-    private const int GRID_COLUMNS = 4;
+    public const int GRID_COLUMNS = 4;
 
     // Number of rows in the grid refinement method.
-    private const int GRID_ROWS = 5;
+    public const int GRID_ROWS = 5;
 
     // Value to multiple latitude degrees to convert it to an integer with the maximum encoding
     // precision. I.e. ENCODING_BASE**3 * GRID_ROWS**GRID_CODE_LENGTH
-    private const int LAT_INTEGER_MULTIPLIER = 8000 * 3125;
+    public const int LAT_INTEGER_MULTIPLIER = 8000 * 3125;
 
     // Value to multiple longitude degrees to convert it to an integer with the maximum encoding
     // precision. I.e. ENCODING_BASE**3 * GRID_COLUMNS**GRID_CODE_LENGTH
-    private const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
+    public const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
 
     // Value of the most significant latitude digit after it has been converted to an integer.
     // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
@@ -126,64 +127,9 @@ final class OpenLocationCode implements Stringable
             $latitude = $latitude - 0.9 * self::computeLatitudePrecision($codeLength);
         }
 
-        // PHP has native support for string concatenation, and string reversal is quite fast.
-        $revCode = "";
-
-        // Compute the code.
-        // The idea of this approach is to convert each value to an integer 
-        // after multiplying it by the final precision. 
-        // This allows us to use only integer operations, so
-        // avoiding any accumulation of floating point representation errors.
-        // However, it must also be noted that the calculation may poduce 10-digit integers
-        // that begins with 6, which overflows the 32-bit PHP int type.
-        // The good news is, this relatively small bignum can be precisely represented
-        // by the double-precision float type. We just need to be careful when calculating.
-
-        // Multiply values by their precision and convert to positive.
-        // Rounding avoids/minimizes errors due to floating-point precision.
-        // Since the numbers are positive, floor() is equivalent to intval().
-        $latVal = floor(round(($latitude + self::LATITUDE_MAX) * self::LAT_INTEGER_MULTIPLIER * 1e6) / 1e6);
-        $lngVal = floor(round(($longitude + self::LONGITUDE_MAX) * self::LNG_INTEGER_MULTIPLIER * 1e6) / 1e6);
-
-        // Compute the grid part of the code if necessary.
-        if ($codeLength > self::PAIR_CODE_LENGTH) {
-            for ($i = 0; $i < self::GRID_CODE_LENGTH; $i++) {
-                $latDigit = (int) fmod($latVal, self::GRID_ROWS);
-                $lngDigit = (int) fmod($lngVal, self::GRID_COLUMNS);
-                $ndx = $latDigit * self::GRID_COLUMNS + $lngDigit;
-                $revCode .= self::CODE_ALPHABET[$ndx];
-                $latVal = floor($latVal / self::GRID_ROWS);
-                $lngVal = floor($lngVal / self::GRID_COLUMNS);
-            }
-            unset($i, $latDigit, $lngDigit, $ndx);
-        } else {
-            $latVal = floor($latVal / pow(self::GRID_ROWS, self::GRID_CODE_LENGTH));
-            $lngVal = floor($lngVal / pow(self::GRID_COLUMNS, self::GRID_CODE_LENGTH));
-        }
-
-        // Compute the pair section of the code.
-        for ($i = 0; $i < intdiv(self::PAIR_CODE_LENGTH, 2); $i++) {
-            $revCode .= self::CODE_ALPHABET[(int) fmod($lngVal, self::ENCODING_BASE)];
-            $revCode .= self::CODE_ALPHABET[(int) fmod($latVal, self::ENCODING_BASE)];
-            $latVal = floor($latVal / self::ENCODING_BASE);
-            $lngVal = floor($lngVal / self::ENCODING_BASE);
-            // If we are at the separator position, add the separator
-            if ($i == 0) {
-                $revCode .= self::SEPARATOR;
-            }
-        }
-        unset($i);
-        // Reverse the code
-        $code = strrev($revCode);
-
-        // If we need to pad the code, replace some of the digits.
-        if ($codeLength < self::SEPARATOR_POSITION) {
-            for ($i = $codeLength; $i < self::SEPARATOR_POSITION; $i++) {
-                $code[$i] = self::PADDING_CHARACTER;
-            }
-        }
-        $finalCode = substr($code, 0, max(self::SEPARATOR_POSITION + 1, $codeLength + 1));
-        return new self($finalCode);
+        // Delegate to the correct Code Calculator to generate the code for 32-bit/64-bit platforms
+        $calculator = AbstractCodeCalculator::getDefaultCalculator();
+        return new self($calculator->encode($latitude, $longitude, $codeLength));
     }
 
     // ---
