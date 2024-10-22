@@ -85,7 +85,7 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
             $latPlaceVal = floor($latPlaceVal / OpenLocationCode::ENCODING_BASE);
             $lngPlaceVal = floor($lngPlaceVal / OpenLocationCode::ENCODING_BASE);
             $latVal += strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i]) * $latPlaceVal;
-            $lngVal = strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i + 1]) * $lngPlaceVal;
+            $lngVal += strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i + 1]) * $lngPlaceVal;
         }
         unset($i);
         for ($i = OpenLocationCode::PAIR_CODE_LENGTH; $i < min(strlen($strippedCode), OpenLocationCode::MAX_DIGIT_COUNT); $i++) {
