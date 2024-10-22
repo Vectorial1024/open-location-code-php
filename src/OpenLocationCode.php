@@ -160,43 +160,9 @@ final class OpenLocationCode implements Stringable
         // Strip padding and separator characters out of the code.
         $clean = str_replace([self::SEPARATOR, self::PADDING_CHARACTER], "", $this->code);
 
-        // Initialize the values. 
-        // We will assume these values are floats to ensure 32bit PHP compatibility.
-        // See relevant comments in encode() above.
-        $latVal = -self::LATITUDE_MAX * self::LAT_INTEGER_MULTIPLIER;
-        $lngVal = -self::LONGITUDE_MAX * self::LNG_INTEGER_MULTIPLIER;
-        // Define the place value for the digits. We'll divide this down as we work through the code.
-        $latPlaceVal = self::LAT_MSP_VALUE;
-        $lngPlaceVal = self::LNG_MSP_VALUE;
-        for ($i = self::PAIR_CODE_LENGTH; $i < min(strlen($clean), self::MAX_DIGIT_COUNT); $i += 2) {
-            $latPlaceVal = floor($latPlaceVal / self::ENCODING_BASE);
-            $lngPlaceVal = floor($lngPlaceVal / self::ENCODING_BASE);
-            $latVal += strpos(self::CODE_ALPHABET, $clean[$i]) * $latPlaceVal;
-            $lngVal = strpos(self::CODE_ALPHABET, $clean[$i + 1]) * $lngPlaceVal;
-        }
-        unset($i);
-        for ($i = self::PAIR_CODE_LENGTH; $i < min(strlen($clean), self::MAX_DIGIT_COUNT); $i++) {
-            $latPlaceVal = floor($latPlaceVal / self::GRID_ROWS);
-            $lngPlaceVal = floor($lngPlaceVal / self::GRID_COLUMNS);
-            $digit = strpos(self::CODE_ALPHABET, $clean[$i]);
-            $row = intdiv($digit, self::GRID_COLUMNS);
-            $col = $digit % self::GRID_COLUMNS;
-            $latVal += $row * $latPlaceVal;
-            $lngVal += $col * $lngPlaceVal;
-            unset($digit);
-        }
-        unset($i);
-        $latitudeLo = $latVal / self::LAT_INTEGER_MULTIPLIER;
-        $longitudeLo = $lngVal / self::LNG_INTEGER_MULTIPLIER;
-        $latitudeHi = ($latVal + $latPlaceVal) / self::LAT_INTEGER_MULTIPLIER;
-        $longitudeHi = ($lngVal + $lngPlaceVal) / self::LNG_INTEGER_MULTIPLIER;
-        return new CodeArea(
-            $latitudeLo,
-            $longitudeLo,
-            $latitudeHi,
-            $longitudeHi,
-            min(strlen($clean), self::MAX_DIGIT_COUNT),
-        );
+        // Delegate to the correct Code Calculator to decode the OLC code for 32-bit/64-bit platforms
+        $calculator = AbstractCodeCalculator::getDefaultCalculator();
+        return $calculator->decode($clean);
     }
 
     public function __toString(): string

@@ -45,11 +45,11 @@ abstract class AbstractCodeCalculator
     abstract protected function generateRevOlcCode(float $latitude, float $longitude, int $codeLength): string;
 
     /**
-     * Decodes the given (string) Open Location Code into a CodeArea object encapsulating latitude/longitude bounding box.
-     * @param string $code The Open Location Code in string format
+     * Assuming the given (string) Open Location Code is valid and stripped, decodes it into a CodeArea object encapsulating latitude/longitude bounding box.
+     * @param string $strippedCode The stripped Open Location Code
      * @return CodeArea A CodeArea object.
      */
-    abstract public function decode(string $code): CodeArea;
+    abstract public function decode(string $strippedCode): CodeArea;
 
     /**
      * Returns a static instance of the appropriate code calculator depending on whether the current PHP is 32-bit/64-bit.

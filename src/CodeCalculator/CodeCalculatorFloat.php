@@ -11,6 +11,14 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
  */
 class CodeCalculatorFloat extends AbstractCodeCalculator
 {
+    // Value of the most significant latitude digit after it has been converted to an integer.
+    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
+    public const float LAT_MSP_VALUE = OpenLocationCode::LAT_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
+
+    // Value of the most significant longitude digit after it has been converted to an integer.
+    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
+    public const float LNG_MSP_VALUE = OpenLocationCode::LNG_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
+
     protected function generateRevOlcCode(float $latitude, float $longitude, int $codeLength): string
     {
         // PHP has native support for string concatenation, and string reversal is quite fast.
@@ -59,13 +67,48 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
                 $revCode .= OpenLocationCode::SEPARATOR;
             }
         }
-        
+
         return $revCode;
     }
 
-    public function decode(string $code): CodeArea
+    public function decode(string $strippedCode): CodeArea
     {
-        // todo
-        return new CodeArea(0, 0, 0, 0, 0);
+        // Initialize the values. 
+        // We will assume these values are floats to ensure 32bit PHP compatibility.
+        // See relevant comments in encode() above.
+        $latVal = -OpenLocationCode::LATITUDE_MAX * OpenLocationCode::LAT_INTEGER_MULTIPLIER;
+        $lngVal = -OpenLocationCode::LONGITUDE_MAX * OpenLocationCode::LNG_INTEGER_MULTIPLIER;
+        // Define the place value for the digits. We'll divide this down as we work through the code.
+        $latPlaceVal = self::LAT_MSP_VALUE;
+        $lngPlaceVal = self::LNG_MSP_VALUE;
+        for ($i = OpenLocationCode::PAIR_CODE_LENGTH; $i < min(strlen($strippedCode), OpenLocationCode::MAX_DIGIT_COUNT); $i += 2) {
+            $latPlaceVal = floor($latPlaceVal / OpenLocationCode::ENCODING_BASE);
+            $lngPlaceVal = floor($lngPlaceVal / OpenLocationCode::ENCODING_BASE);
+            $latVal += strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i]) * $latPlaceVal;
+            $lngVal = strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i + 1]) * $lngPlaceVal;
+        }
+        unset($i);
+        for ($i = OpenLocationCode::PAIR_CODE_LENGTH; $i < min(strlen($strippedCode), OpenLocationCode::MAX_DIGIT_COUNT); $i++) {
+            $latPlaceVal = floor($latPlaceVal / OpenLocationCode::GRID_ROWS);
+            $lngPlaceVal = floor($lngPlaceVal / OpenLocationCode::GRID_COLUMNS);
+            $digit = strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i]);
+            $row = intdiv($digit, OpenLocationCode::GRID_COLUMNS);
+            $col = $digit % OpenLocationCode::GRID_COLUMNS;
+            $latVal += $row * $latPlaceVal;
+            $lngVal += $col * $lngPlaceVal;
+            unset($digit);
+        }
+        unset($i);
+        $latitudeLo = $latVal / OpenLocationCode::LAT_INTEGER_MULTIPLIER;
+        $longitudeLo = $lngVal / OpenLocationCode::LNG_INTEGER_MULTIPLIER;
+        $latitudeHi = ($latVal + $latPlaceVal) / OpenLocationCode::LAT_INTEGER_MULTIPLIER;
+        $longitudeHi = ($lngVal + $lngPlaceVal) / OpenLocationCode::LNG_INTEGER_MULTIPLIER;
+        return new CodeArea(
+            $latitudeLo,
+            $longitudeLo,
+            $latitudeHi,
+            $longitudeHi,
+            min(strlen($strippedCode), OpenLocationCode::MAX_DIGIT_COUNT),
+        );
     }
 }
