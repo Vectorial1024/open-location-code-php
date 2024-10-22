@@ -10,6 +10,14 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
  */
 abstract class AbstractCodeCalculator
 {
+    // Value to multiple latitude degrees to convert it to an integer with the maximum encoding
+    // precision. I.e. ENCODING_BASE**3 * GRID_ROWS**GRID_CODE_LENGTH
+    protected const int LAT_INTEGER_MULTIPLIER = 8000 * 3125;
+
+    // Value to multiple longitude degrees to convert it to an integer with the maximum encoding
+    // precision. I.e. ENCODING_BASE**3 * GRID_COLUMNS**GRID_CODE_LENGTH
+    protected const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
+
     /**
      * Assuming the given latitude and longitude are valid, encode these coordinates into an Open Location Code.
      * @param float $latitude The latitude in decimal degrees.

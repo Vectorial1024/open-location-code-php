@@ -37,8 +37,8 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
         // Multiply values by their precision and convert to positive.
         // Rounding avoids/minimizes errors due to floating-point precision.
         // Since the numbers are positive, floor() is equivalent to intval().
-        $latVal = floor(round(($latitude + OpenLocationCode::LATITUDE_MAX) * OpenLocationCode::LAT_INTEGER_MULTIPLIER * 1e6) / 1e6);
-        $lngVal = floor(round(($longitude + OpenLocationCode::LONGITUDE_MAX) * OpenLocationCode::LNG_INTEGER_MULTIPLIER * 1e6) / 1e6);
+        $latVal = floor(round(($latitude + OpenLocationCode::LATITUDE_MAX) * self::LAT_INTEGER_MULTIPLIER * 1e6) / 1e6);
+        $lngVal = floor(round(($longitude + OpenLocationCode::LONGITUDE_MAX) * self::LNG_INTEGER_MULTIPLIER * 1e6) / 1e6);
 
         // Compute the grid part of the code if necessary.
         if ($codeLength > OpenLocationCode::PAIR_CODE_LENGTH) {
@@ -76,8 +76,8 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
         // Initialize the values. 
         // We will assume these values are floats to ensure 32bit PHP compatibility.
         // See relevant comments in encode() above.
-        $latVal = -OpenLocationCode::LATITUDE_MAX * OpenLocationCode::LAT_INTEGER_MULTIPLIER;
-        $lngVal = -OpenLocationCode::LONGITUDE_MAX * OpenLocationCode::LNG_INTEGER_MULTIPLIER;
+        $latVal = -OpenLocationCode::LATITUDE_MAX * self::LAT_INTEGER_MULTIPLIER;
+        $lngVal = -OpenLocationCode::LONGITUDE_MAX * self::LNG_INTEGER_MULTIPLIER;
         // Define the place value for the digits. We'll divide this down as we work through the code.
         $latPlaceVal = self::LAT_MSP_VALUE;
         $lngPlaceVal = self::LNG_MSP_VALUE;
@@ -99,10 +99,10 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
             unset($digit);
         }
         unset($i);
-        $latitudeLo = $latVal / OpenLocationCode::LAT_INTEGER_MULTIPLIER;
-        $longitudeLo = $lngVal / OpenLocationCode::LNG_INTEGER_MULTIPLIER;
-        $latitudeHi = ($latVal + $latPlaceVal) / OpenLocationCode::LAT_INTEGER_MULTIPLIER;
-        $longitudeHi = ($lngVal + $lngPlaceVal) / OpenLocationCode::LNG_INTEGER_MULTIPLIER;
+        $latitudeLo = $latVal / self::LAT_INTEGER_MULTIPLIER;
+        $longitudeLo = $lngVal / self::LNG_INTEGER_MULTIPLIER;
+        $latitudeHi = ($latVal + $latPlaceVal) / self::LAT_INTEGER_MULTIPLIER;
+        $longitudeHi = ($lngVal + $lngPlaceVal) / self::LNG_INTEGER_MULTIPLIER;
         return new CodeArea(
             $latitudeLo,
             $longitudeLo,

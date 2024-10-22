@@ -54,21 +54,7 @@ final class OpenLocationCode implements Stringable
     // Number of rows in the grid refinement method.
     public const int GRID_ROWS = 5;
 
-    // Value to multiple latitude degrees to convert it to an integer with the maximum encoding
-    // precision. I.e. ENCODING_BASE**3 * GRID_ROWS**GRID_CODE_LENGTH
-    public const int LAT_INTEGER_MULTIPLIER = 8000 * 3125;
-
-    // Value to multiple longitude degrees to convert it to an integer with the maximum encoding
-    // precision. I.e. ENCODING_BASE**3 * GRID_COLUMNS**GRID_CODE_LENGTH
-    public const int LNG_INTEGER_MULTIPLIER = 8000 * 1024;
-
-    // Value of the most significant latitude digit after it has been converted to an integer.
-    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
-    private const float LAT_MSP_VALUE = self::LAT_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
-
-    // Value of the most significant longitude digit after it has been converted to an integer.
-    // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
-    private const float LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * self::ENCODING_BASE * self::ENCODING_BASE;
+    // Note: constants that are only for encoding/decoding are moved to AbstractCodeCalculator.
 
     // The 360 degree circle information to normalize longitudes.
     private const int CIRCLE_DEG = 2 * self::LONGITUDE_MAX;
