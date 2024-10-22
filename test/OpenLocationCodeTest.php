@@ -9,6 +9,11 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
 
 class OpenLocationCodeTest extends TestCase
 {
+    public function testCorrectConstants(): void
+    {
+        $this->assertEquals(OpenLocationCode::ENCODING_BASE, strlen(OpenLocationCode::CODE_ALPHABET));
+    }
+
     #[DataProvider('codeValidityProvider')]
     public function testCorrectCodeValidity(?string $testCode, bool $expectedValidity): void
     {
