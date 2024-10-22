@@ -61,18 +61,18 @@ abstract class AbstractCodeCalculator
 
     /**
      * Returns a static instance of the appropriate code calculator depending on whether the current PHP is 32-bit/64-bit.
-     * 
      * 32-bit PHP will get a calculator that uses floats, while 64-bit PHP will get a calculator that uses "long" ints.
      * 
-     * This is required to allow 32-bit PHP environments to correctly calculate Open Location Codes.
-     * 
-     * @return CodeCalculatorFloat The appropriate code calculator.
+     * This is required to allow 32-bit PHP environments to correctly calculate Open Location Codes, while preserving
+     * the performance advantage of 64-bit PHP by using integer operations.
+     * @return CodeCalculatorFloat|CodeCalculatorInt The appropriate code calculator.
      */
-    public static function getDefaultCalculator(): CodeCalculatorFloat
+    public static function getDefaultCalculator(): CodeCalculatorFloat|CodeCalculatorInt
     {
-        // always give float calculator for now
-        // todo check platform status to give int calculator
-        static $defaultCalculator = new CodeCalculatorFloat();
+        // check PHP environment to give int calculator where possible
+        // 32-bit PHP has 32-bit int, which uses 4 bytes i.e. PHP_INT_SIZE = 4
+        // initializing static variables with constructors is only allowed for PHP 8.3+
+        static $defaultCalculator = PHP_INT_SIZE > 4 ? new CodeCalculatorInt() : new CodeCalculatorFloat();
         return $defaultCalculator;
     }
 }
