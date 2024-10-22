@@ -46,7 +46,7 @@ abstract class AbstractCodeCalculator
 
     /**
      * Assuming the given (string) Open Location Code is valid and stripped, decodes it into a CodeArea object encapsulating latitude/longitude bounding box.
-     * @param string $strippedCode The stripped Open Location Code
+     * @param string $strippedCode The stripped Open Location Code.
      * @return CodeArea A CodeArea object.
      */
     abstract public function decode(string $strippedCode): CodeArea;
