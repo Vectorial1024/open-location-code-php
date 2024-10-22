@@ -13,11 +13,11 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
 {
     // Value of the most significant latitude digit after it has been converted to an integer.
     // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
-    public const float LAT_MSP_VALUE = OpenLocationCode::LAT_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
+    public const float LAT_MSP_VALUE = self::LAT_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
 
     // Value of the most significant longitude digit after it has been converted to an integer.
     // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
-    public const float LNG_MSP_VALUE = OpenLocationCode::LNG_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
+    public const float LNG_MSP_VALUE = self::LNG_INTEGER_MULTIPLIER * OpenLocationCode::ENCODING_BASE * OpenLocationCode::ENCODING_BASE;
 
     protected function generateRevOlcCode(float $latitude, float $longitude, int $codeLength): string
     {
