@@ -21,7 +21,7 @@ abstract class AbstractCodeCalculator
     /**
      * Decodes the given (string) Open Location Code into a CodeArea object encapsulating latitude/longitude bounding box.
      * @param string $code The Open Location Code in string format
-     * @return CodeArea The resulting Code Area.
+     * @return CodeArea A CodeArea object.
      */
     abstract public function decode(string $code): CodeArea;
 

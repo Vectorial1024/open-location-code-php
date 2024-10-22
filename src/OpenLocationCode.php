@@ -204,7 +204,7 @@ final class OpenLocationCode implements Stringable
 
     /**
      * Decodes this object into a CodeArea object encapsulating latitude/longitude bounding box.
-     * @return void
+     * @return CodeArea A CodeArea object.
      */
     public function decode(): CodeArea
     {
