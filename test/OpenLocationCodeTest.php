@@ -45,11 +45,15 @@ class OpenLocationCodeTest extends TestCase
         $floatCal = new CodeCalculatorFloat();
         $resultCode = $floatCal->encode($latitude, $longitude, OpenLocationCode::CODE_PRECISION_NORMAL);
         $this->assertEquals($resultCode, $expectedCode);
+        $resultCodeArea = $floatCal->decode($expectedCode);
+        $this->assertTrue($resultCodeArea->contains($latitude, $longitude));
         if (PHP_INT_SIZE >= 8) {
             // at least 64-bit, which means we can use "long" ints here
             $intCal = new CodeCalculatorInt();
             $resultCode = $intCal->encode($latitude, $longitude, OpenLocationCode::CODE_PRECISION_NORMAL);
             $this->assertEquals($resultCode, $expectedCode);
+            $resultCodeArea = $intCal->decode($expectedCode);
+            $this->assertTrue($resultCodeArea->contains($latitude, $longitude));
         }
     }
 
