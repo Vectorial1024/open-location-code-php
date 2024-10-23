@@ -10,7 +10,7 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
  * A Open Location Code calculator that uses "long" int.
  * As such, this has ensured accuracy, but cannot be used in 32-bit PHP.
  */
-class CodeCalculatorInt extends AbstractCodeCalculator
+final class CodeCalculatorInt extends AbstractCodeCalculator
 {
     // Value of the most significant latitude digit after it has been converted to an integer.
     // Note: since we are using 64-bit PHP, this can be an int.

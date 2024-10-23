@@ -9,7 +9,7 @@ use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
  * A Open Location Code calculator that uses float.
  * As such, this is usable on any PHP version. but may have unforeseen inaccuracy.
  */
-class CodeCalculatorFloat extends AbstractCodeCalculator
+final class CodeCalculatorFloat extends AbstractCodeCalculator
 {
     // Value of the most significant latitude digit after it has been converted to an integer.
     // Note: to ensure 32bit PHP compatibility, this is now a precisely-represented float.
