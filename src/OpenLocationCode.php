@@ -143,12 +143,10 @@ final class OpenLocationCode implements Stringable
         if (!$this->isFull()) {
             throw new LogicException("Method decode() may only be called on valid full codes, but code was {$this->code}.");
         }
-        // Strip padding and separator characters out of the code.
-        $clean = str_replace([self::SEPARATOR, self::PADDING_CHARACTER], "", $this->code);
 
         // Delegate to the correct Code Calculator to decode the OLC code for 32-bit/64-bit platforms
         $calculator = AbstractCodeCalculator::getDefaultCalculator();
-        return $calculator->decode($clean);
+        return $calculator->decode($this->code);
     }
 
     public function __toString(): string

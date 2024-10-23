@@ -71,7 +71,7 @@ class CodeCalculatorFloat extends AbstractCodeCalculator
         return $revCode;
     }
 
-    public function decode(string $strippedCode): CodeArea
+    protected function generateCodeArea(string $strippedCode): CodeArea
     {
         // Initialize the values. 
         // We will assume these values are floats to ensure 32bit PHP compatibility.

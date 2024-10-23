@@ -75,7 +75,7 @@ class CodeCalculatorInt extends AbstractCodeCalculator
         return $revCode;
     }
 
-    public function decode(string $strippedCode): CodeArea
+    protected function generateCodeArea(string $strippedCode): CodeArea
     {
         // Initialize the values. 
         $latVal = -OpenLocationCode::LATITUDE_MAX * self::LAT_INTEGER_MULTIPLIER;
