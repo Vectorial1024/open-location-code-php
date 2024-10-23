@@ -27,8 +27,8 @@ via Composer:
 composer require vectorial1024/open-location-code-php
 ```
 
-**Special Notice**: to ensure 32-bit PHP compatibility, this library uses `float` variables instead of `int` variables to calculate Open Location Codes.
-This may cause inaccuracies in some unforseen edge cases, but generally speaking, there should be no problems.
+**Special Notice**: to ensure 32-bit PHP compatibility, this library will check the PHP runtime and, if it detects a 32-bit PHP runtime, will use `float` variables instead of `int` variables to calculate Open Location Codes.
+This may cause some unintended inaccuracies in 32-bit PHP, but generally speaking, there should be no problems.
 
 ## Example code
 
