@@ -5,6 +5,8 @@ namespace Vectorial1024\OpenLocationCodePhp\Test;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Vectorial1024\OpenLocationCodePhp\CodeCalculator\CodeCalculatorFloat;
+use Vectorial1024\OpenLocationCodePhp\CodeCalculator\CodeCalculatorInt;
 use Vectorial1024\OpenLocationCodePhp\OpenLocationCode;
 
 class OpenLocationCodeTest extends TestCase
@@ -38,6 +40,17 @@ class OpenLocationCodeTest extends TestCase
         $this->assertEquals($expectedCode, $codeObject->code);
         // while OLC represents an area via lossful encoding, at least the area should contain the original point
         $this->assertTrue($codeObject->contains($latitude, $longitude));
+
+        // for convenience, also test the code calculators here
+        $floatCal = new CodeCalculatorFloat();
+        $resultCode = $floatCal->encode($latitude, $longitude, OpenLocationCode::CODE_PRECISION_NORMAL);
+        $this->assertEquals($resultCode, $expectedCode);
+        if (PHP_INT_SIZE >= 8) {
+            // at least 64-bit, which means we can use "long" ints here
+            $intCal = new CodeCalculatorInt();
+            $resultCode = $intCal->encode($latitude, $longitude, OpenLocationCode::CODE_PRECISION_NORMAL);
+            $this->assertEquals($resultCode, $expectedCode);
+        }
     }
 
     public static function codeValidityProvider(): array
