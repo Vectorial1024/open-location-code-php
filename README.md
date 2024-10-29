@@ -4,6 +4,7 @@
 [![Packagist Downloads][packagist-downloads-image]][packagist-stats-url]
 [![PHP Dependency Version][php-version-image]][packagist-url]
 [![GitHub Actions Workflow Status][php-build-status-image]][github-actions-url]
+[![GitHub Repo Stars][github-stars-image]][github-repo-url]
 
 This is a modern PHP port of the `google/open-location-code` repository. Please visit https://github.com/google/open-location-code for discussion and up-to-date information about **Open Location Code ("OLC", aka "Plus Code")** itself. This repository only concerns the PHP implementation.
 
@@ -142,6 +143,7 @@ composer run-script test
 
 [packagist-url]: https://packagist.org/packages/vectorial1024/open-location-code-php
 [packagist-stats-url]: https://packagist.org/packages/vectorial1024/open-location-code-php/stats
+[github-repo-url]: https://github.com/Vectorial1024/open-location-code-php
 [github-actions-url]: https://github.com/Vectorial1024/open-location-code-php/actions/workflows/php.yml
 
 [packagist-license-image]: https://img.shields.io/packagist/l/vectorial1024/open-location-code-php?style=plastic
@@ -149,3 +151,4 @@ composer run-script test
 [packagist-downloads-image]: https://img.shields.io/packagist/dm/vectorial1024/open-location-code-php?style=plastic
 [php-version-image]: https://img.shields.io/packagist/dependency-v/vectorial1024/open-location-code-php/php?style=plastic&label=PHP
 [php-build-status-image]: https://img.shields.io/github/actions/workflow/status/Vectorial1024/open-location-code-php/php.yml?style=plastic
+[github-stars-image]: https://img.shields.io/github/stars/vectorial1024/open-location-code-php
