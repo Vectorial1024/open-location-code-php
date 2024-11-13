@@ -79,7 +79,7 @@ A quick reference of available classes/methods; please see the PHPDoc for detail
 ```php
 /* Vectorial1024\OpenLocationCodePhp\OpenLocationCode */
 
-class OpenLocationCode implememts Stringable
+class OpenLocationCode implements Stringable
 {
     public readonly string $code;
     // The explicit string cast gives $this->code;
