@@ -129,13 +129,7 @@ class CodeArea
 ```
 
 ## Testing
-via PHPUnit; first ensure PHPUnit has been set up correctly:
-
-```sh
-composer update
-```
-
-Then:
+PHPUnit via Composer:
 
 ```sh
 composer run-script test
