@@ -124,7 +124,7 @@ class CodeArea
     public function getCenterLatitude(): float;
     public function getCenterLongitude(): float;
 
-    public function contains(float $latitude, float $longitude): float;
+    public function contains(float $latitude, float $longitude): bool;
 }
 ```
 
