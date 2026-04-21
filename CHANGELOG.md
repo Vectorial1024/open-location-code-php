@@ -4,6 +4,10 @@ Note: you may refer to `README.md` for description of features.
 
 ## Dev (WIP)
 
+## 1.1.3 (2026-04-21)
+
+GitHub security advisory (https://github.com/advisories/GHSA-qrr6-mg7r-m243)
+
 ## 1.1.2 (2024-10-29)
 
 Hotfix: removed `composer.lock` from distribution (ba2014fc551dbfd2456eadb4f9e31ed5f80671a6)
