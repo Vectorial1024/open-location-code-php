@@ -34,7 +34,7 @@ This may cause some unintended inaccuracies in 32-bit PHP, but generally speakin
 
 ### Change log
 
-Please see `CHANGELOG.MD`.
+Please see `CHANGELOG.md`.
 
 ## Example code
 
