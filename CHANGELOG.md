@@ -4,6 +4,8 @@ Note: you may refer to `README.md` for description of features.
 
 ## Dev (WIP)
 
+Fixed decoding of OLC producing out-of-bounds coordinates (https://github.com/Vectorial1024/open-location-code-php/pull/6).
+
 ## 1.1.3 (2026-04-21)
 
 GitHub security advisory (https://github.com/advisories/GHSA-qrr6-mg7r-m243)
