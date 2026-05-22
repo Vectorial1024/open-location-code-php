@@ -88,7 +88,7 @@ class OpenLocationCodeTest extends TestCase
             "Changi Airport, Singapore" => [1.357063, 103.988563, "6PH59X4Q+RC"],
             "International Antarctic Centre, Christchurch" => [-43.489063, 172.547188, "4V8JGG6W+9V"],
             "Christo Redentor, Rio de Janeiro" => [-22.951937, -43.210437, "589R2QXQ+6R"],
-            "New Chitose Airport, Chitose" => [42.786062,141.680937, "8RJ3QMPJ+C9"],
+            "New Chitose Airport, Chitose" => [42.786062, 141.680937, "8RJ3QMPJ+C9"],
             "Berling Strait" => [65.759937, -169.149437, "92QGQV52+X6"],
             "Null point" => [0, 0, "6FG22222+22"],
         ];
