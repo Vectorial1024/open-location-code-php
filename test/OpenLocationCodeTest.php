@@ -46,6 +46,8 @@ class OpenLocationCodeTest extends TestCase
         $resultCode = $floatCal->encode($latitude, $longitude, OpenLocationCode::CODE_PRECISION_NORMAL);
         $this->assertEquals($resultCode, $expectedCode);
         $resultCodeArea = $floatCal->decode($expectedCode);
+        $this->confirmCoordinatesValidity($resultCodeArea->northLatitude, $resultCodeArea->eastLongitude);
+        $this->confirmCoordinatesValidity($resultCodeArea->southLatitude, $resultCodeArea->westLongitude);
         $this->assertTrue($resultCodeArea->contains($latitude, $longitude));
         if (PHP_INT_SIZE >= 8) {
             // at least 64-bit, which means we can use "long" ints here
@@ -55,6 +57,16 @@ class OpenLocationCodeTest extends TestCase
             $resultCodeArea = $intCal->decode($expectedCode);
             $this->assertTrue($resultCodeArea->contains($latitude, $longitude));
         }
+    }
+
+    private function confirmCoordinatesValidity(float $latitude, float $longitude): void
+    {
+        // check latitude
+        $this->assertGreaterThanOrEqual(-90, $latitude);
+        $this->assertLessThanOrEqual(90, $latitude);
+        // check longitude
+        $this->assertGreaterThanOrEqual(-180, $longitude);
+        $this->assertLessThanOrEqual(180, $longitude);
     }
 
     public static function codeValidityProvider(): array
