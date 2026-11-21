@@ -59,6 +59,24 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
+    #[DataProvider('decodingProvider')]
+    public function testCorrectCodeAreaFromCode(string $code, int $expectedLength, float $latLo, float $lngLo, float $latHi, float $lngHi): void
+    {
+        $calculators = [new CodeCalculatorFloat()];
+        if (PHP_INT_SIZE >= 8) {
+            $calculators[] = new CodeCalculatorInt();
+        }
+        foreach ($calculators as $calculator) {
+            $area = $calculator->decode($code);
+            $message = "Decoding $code with " . $calculator::class . " is incorrect.";
+            $this->assertEquals($expectedLength, $area->length, $message);
+            $this->assertEqualsWithDelta($latLo, $area->southLatitude, 1e-10, $message);
+            $this->assertEqualsWithDelta($lngLo, $area->westLongitude, 1e-10, $message);
+            $this->assertEqualsWithDelta($latHi, $area->northLatitude, 1e-10, $message);
+            $this->assertEqualsWithDelta($lngHi, $area->eastLongitude, 1e-10, $message);
+        }
+    }
+
     private function confirmCoordinatesValidity(float $latitude, float $longitude): void
     {
         // check latitude
@@ -91,6 +109,22 @@ class OpenLocationCodeTest extends TestCase
             "New Chitose Airport, Chitose" => [42.786062, 141.680937, "8RJ3QMPJ+C9"],
             "Berling Strait" => [65.759937, -169.149437, "92QGQV52+X6"],
             "Null point" => [0, 0, "6FG22222+22"],
+        ];
+    }
+
+    public static function decodingProvider(): array
+    {
+        // code, length, latitude low, longitude low, latitude high, longitude high
+        // (from test_data/decoding.csv of the reference implementation)
+        return [
+            "10 digits" => ["7FG49QCJ+2V", 10, 20.37, 2.782125, 20.370125, 2.78225],
+            "Padded" => ["7FG49Q00+", 6, 20.35, 2.75, 20.4, 2.8],
+            "11 digits" => ["7FG49QCJ+2VX", 11, 20.3701, 2.78221875, 20.370125, 2.78225],
+            "13 digits" => ["7FG49QCJ+2VXGJ", 13, 20.370113, 2.782234375, 20.370114, 2.78223632813],
+            "11 digits near null point" => ["6FH32222+222", 11, 1, 1, 1.000025, 1.00003125],
+            "14 digits" => ["8J7GRCCX+FMJWRQ", 14, 35.8212246, 70.449142089844, 35.8212248, 70.449142578125],
+            "15 digits" => ["849VGJQF+VX7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
+            "More than 15 digits" => ["849VGJQF+VX7QR3J7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
         ];
     }
 }

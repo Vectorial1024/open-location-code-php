@@ -83,7 +83,7 @@ final class CodeCalculatorInt extends AbstractCodeCalculator
         // Define the place value for the digits. We'll divide this down as we work through the code.
         $latPlaceVal = self::LAT_MSP_VALUE;
         $lngPlaceVal = self::LNG_MSP_VALUE;
-        for ($i = 0; $i < min(strlen($strippedCode), OpenLocationCode::MAX_DIGIT_COUNT); $i += 2) {
+        for ($i = 0; $i < min(strlen($strippedCode), OpenLocationCode::PAIR_CODE_LENGTH); $i += 2) {
             $latPlaceVal = intdiv($latPlaceVal, OpenLocationCode::ENCODING_BASE);
             $lngPlaceVal = intdiv($lngPlaceVal, OpenLocationCode::ENCODING_BASE);
             $latVal += strpos(OpenLocationCode::CODE_ALPHABET, $strippedCode[$i]) * $latPlaceVal;
