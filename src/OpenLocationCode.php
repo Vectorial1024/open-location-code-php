@@ -75,7 +75,7 @@ final class OpenLocationCode implements Stringable
     /**
      * Creates Open Location Code object for the provided code.
      * 
-     * @param string $code A valid OLC code; can be a full code or a short code.
+     * @param string|null $code A valid OLC code; can be a full code or a short code.
      * @return self The created OLC object.
      * @throws InvalidArgumentException when the passed code is not valid.
      */

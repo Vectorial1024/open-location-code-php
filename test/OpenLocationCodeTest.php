@@ -77,6 +77,13 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
+    #[DataProvider('paddingProvider')]
+    public function testCorrectIsPadded(string $code, bool $expectedPadded): void
+    {
+        $olcObject = OpenLocationCode::createFromCode($code);
+        $this->assertEquals($expectedPadded, $olcObject->isPadded());
+    }
+
     private function confirmCoordinatesValidity(float $latitude, float $longitude): void
     {
         // check latitude
@@ -155,6 +162,24 @@ class OpenLocationCodeTest extends TestCase
             "14 digits" => ["8J7GRCCX+FMJWRQ", 14, 35.8212246, 70.449142089844, 35.8212248, 70.449142578125],
             "15 digits" => ["849VGJQF+VX7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
             "More than 15 digits" => ["849VGJQF+VX7QR3J7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
+        ];
+    }
+
+    public static function paddingProvider(): array
+    {
+        // code, isPadded
+        // (skips invalid codes; invalid codes are guarded and cannot be instantiated)
+        return [
+            "Padded len=2" => ["77000000+", true],
+            "Padded len=4" => ["77770000+", true],
+            "Padded len=6" => ["77777700+", true],
+            "Padded len=8" => ["77777777+", false],
+            "Padded len=10" => ["77777777+77", false],
+            "Padded len=11" => ["77777777+777", false],
+            "Padded len=12" => ["77777777+7777", false],
+            "Padded len=13" => ["77777777+77777", false],
+            "Padded len=14" => ["77777777+777777", false],
+            "Padded len=15" => ["77777777+7777777", false],
         ];
     }
 }
