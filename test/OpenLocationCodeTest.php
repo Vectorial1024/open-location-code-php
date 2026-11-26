@@ -111,6 +111,15 @@ class OpenLocationCodeTest extends TestCase
             "Code strlen=14" => ["88888888+888888", true],
             "Code strlen=15" => ["88888888+8888888", true],
             "Code strlen=16" => ["88888888+88888888", false],
+
+            "Padded code len=1" => ["40000000+", false],
+            "Padded code len=2" => ["44000000+", true],
+            "Padded code len=3" => ["44400000+", false],
+            "Padded code len=4" => ["44440000+", true],
+            "Padded code len=5" => ["44444000+", false],
+            "Padded code len=6" => ["44444400+", true],
+            "Padded code len=7" => ["44444440+", false],
+            "Padded code len=8" => ["44444444+", true],
         ];
     }
 
