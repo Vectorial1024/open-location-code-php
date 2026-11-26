@@ -30,6 +30,7 @@ class OpenLocationCodeTest extends TestCase
         } else {
             $this->expectException(InvalidArgumentException::class);
             $theObject = OpenLocationCode::createFromCode($testCode);
+            unset($theObject);
         }
     }
 
