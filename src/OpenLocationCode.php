@@ -404,14 +404,17 @@ final class OpenLocationCode implements Stringable
             return $longitude;
         }
 
-        // fmod() in PHP uses floored division where the remainder is always positive
-        // to indicate the positive offset from the dividend.
+        // fmod() in PHP truncates, so the remainder has the same sign as the dividend.
         // Therefore, we can normalize any input longitude according to these steps:
         // 1. Shift periodical [-180, 180) to become periodical [0, 360)
-        // 2. Apply fmod(?, 360) to remove the periodicity
-        // 3. Shift [0, 360) to [-180, 180)
-        // 4. Normalization complete
-        return fmod($longitude + self::LONGITUDE_MAX, self::CIRCLE_DEG) - self::LONGITUDE_MAX;
+        // 2. Apply fmod(?, 360) to remove the periodicity; this gives (-360, 360)
+        // 3. Shift it back; this gives (-540, 180)
+        // 4. Move values below -180 up by one circle to get [-180, 180)
+        $longitude = fmod($longitude + self::LONGITUDE_MAX, self::CIRCLE_DEG) - self::LONGITUDE_MAX;
+        if ($longitude < -self::LONGITUDE_MAX) {
+            $longitude += self::CIRCLE_DEG;
+        }
+        return $longitude;
     }
 
     /**
