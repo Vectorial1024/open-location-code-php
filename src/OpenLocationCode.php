@@ -361,7 +361,7 @@ final class OpenLocationCode implements Stringable
     }
 
     /**
-     * Returns whether this object is a full Open Lcation Code.
+     * Returns whether this object is a full Open Location Code.
      * @return bool True if it is a full code.
      */
     public function isFull(): bool
@@ -370,7 +370,7 @@ final class OpenLocationCode implements Stringable
     }
 
     /**
-     * Returns whether this bject is a short Open Location Code.
+     * Returns whether this object is a short Open Location Code.
      * @return bool True if it is a short code.
      */
     public function isShort(): bool
