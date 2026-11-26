@@ -418,6 +418,13 @@ final class OpenLocationCode implements Stringable
      * Compute the latitude precision value for a given code length. Lengths <= 10 have the same
      * precision for latitude and longitude, but lengths > 10 have different precisions due to the
      * grid method having fewer columns than rows. Copied from the JS implementation.
+     *
+     * For quick reference, skipping invalid lengths, this means:
+     * - 2 -> 20
+     * - 4 -> 1
+     * - 6 -> 0.05
+     * - 8 -> 0.0025
+     * - 10 -> 0.000125
      */
     private static function computeLatitudePrecision(int $codeLength): float
     {
