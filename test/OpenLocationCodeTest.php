@@ -120,6 +120,9 @@ class OpenLocationCodeTest extends TestCase
             "Padded code len=6" => ["44444400+", true],
             "Padded code len=7" => ["44444440+", false],
             "Padded code len=8" => ["44444444+", true],
+
+            "Illegal alphabet" => ["A1A1A1A1+A1", false],
+            "Illegal character" => ["9C3XGVJ1+8F", false],
         ];
     }
 
