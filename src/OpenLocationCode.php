@@ -262,12 +262,16 @@ final class OpenLocationCode implements Stringable
     /**
      * Returns whether the provided string is a valid Open Location code.
      * 
-     * @param string $code The code to check.
+     * @param string|null $code The code to check.
      * @return bool True if it is a valid full or short code.
      */
     public static function isValidCode(?string $code): bool
     {
         if ($code === null || strlen($code) < 2) {
+            return false;
+        }
+        if (strlen($code) > 16) {
+            // 15 digits and a plus symbol; max length
             return false;
         }
         $code = strtoupper($code);

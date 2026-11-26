@@ -4,7 +4,8 @@ Note: you may refer to `README.md` for description of features.
 
 ## Dev (WIP)
 
-Fixed decoding of OLC with more than 10 digits: the grid digits were read as pair digits (https://github.com/Vectorial1024/open-location-code-php/pull/7)..
+- Fixed decoding of OLC with more than 10 digits: the grid digits were read as pair digits (https://github.com/Vectorial1024/open-location-code-php/pull/7)..
+- Fixed validity of OLC not checking for maximum code length
 
 ## 1.1.4 (2026-05-22)
 

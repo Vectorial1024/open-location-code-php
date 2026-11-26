@@ -92,9 +92,25 @@ class OpenLocationCodeTest extends TestCase
         return [
             "Null code" => [null, false],
             "Empty code" => ["", false],
-            "Code too short" => ["B", false],
 
+            "Code strlen=1" => ["5", false],
+            "Code strlen=2" => ["55", false],
+            "Code strlen=3" => ["555", false],
+            "Code strlen=4" => ["5555", false],
+            "Code strlen=5" => ["55555", false],
+            "Code strlen=6" => ["555555", false],
+            "Code strlen=7" => ["5555555", false],
+            "Code strlen=8 (no plus)" => ["55555555", false],
+            "London King's Cross, London (strlen=8)" => ["9C3XGVJG+", true],
+            "Code strlen=9" => ["9C3XGVJG+8", false],
             "London King's Cross, London" => ["9C3XGVJG+8F", true],
+
+            "Code strlen=11" => ["88888888+888", true],
+            "Code strlen=12" => ["88888888+8888", true],
+            "Code strlen=13" => ["88888888+88888", true],
+            "Code strlen=14" => ["88888888+888888", true],
+            "Code strlen=15" => ["88888888+8888888", true],
+            "Code strlen=16" => ["88888888+88888888", false],
         ];
     }
 
