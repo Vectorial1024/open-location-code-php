@@ -108,6 +108,9 @@ class OpenLocationCodeTest extends TestCase
         $this->assertTrue($shortenedObject->isShort());
         $this->assertFalse($shortenedObject->isPadded());
         $this->assertFalse($shortenedObject->isFull());
+        // short codes cannot be decoded; use recover instead
+        $this->expectException(LogicException::class);
+        $shortenedObject->decode();
         // because of such closeness, we strip all 4 levels of code away
         $shortenedCode = (string) $shortenedObject;
         $this->assertTrue(str_contains($expectedCode, $shortenedCode));
