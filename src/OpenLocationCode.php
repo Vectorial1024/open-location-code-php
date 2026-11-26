@@ -381,7 +381,7 @@ final class OpenLocationCode implements Stringable
 
     /**
      * Returns whether this object is a padded Open Location Coe, meaning that
-     * it conntains less than 8 valid digits.
+     * it contains less than 8 valid digits.
      * @return bool True if this code is padded.
      */
     public function isPadded(): bool
