@@ -3,6 +3,7 @@
 namespace Vectorial1024\OpenLocationCodePhp\Test;
 
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Vectorial1024\OpenLocationCodePhp\CodeCalculator\CodeCalculatorFloat;
@@ -85,6 +86,60 @@ class OpenLocationCodeTest extends TestCase
     {
         $olcObject = OpenLocationCode::createFromCode($code);
         $this->assertEquals($expectedPadded, $olcObject->isPadded());
+    }
+
+    #[DataProvider('encodingProvider')]
+    public function testCorrectShortenAndRecover(float $latitude, float $longitude, string $expectedCode): void
+    {
+        // basically, shortening/recovering works by discovering that the reference point is in the same grid as the query point.
+        $codeObject = OpenLocationCode::createFromCoordinates($latitude, $longitude);
+        $this->assertEquals($expectedCode, $codeObject->code);
+
+        // recovering from a full code is no-op
+        $uselessRecovery = $codeObject->recover(0, 0);
+        $this->assertEquals($expectedCode, $uselessRecovery);
+
+        // we definitely cannot shorten with a faraway point
+        $this->expectException(InvalidArgumentException::class);
+        $codeObject->shorten(-90, -180);
+
+        // self is always in the same grid as self
+        $shortenedObject = $codeObject->shorten($latitude, $longitude);
+        $this->assertTrue($shortenedObject->isShort());
+        $this->assertFalse($shortenedObject->isPadded());
+        $this->assertFalse($shortenedObject->isFull());
+        // because of such closeness, we strip all 4 levels of code away
+        $shortenedCode = (string) $shortenedObject;
+        $this->assertTrue(str_contains($expectedCode, $shortenedCode));
+        $this->assertTrue(strlen($shortenedCode) == 3);
+        $this->assertTrue(str_starts_with($shortenedCode, '+'));
+        // shortened codes cannot be shortened again
+        $this->expectException(LogicException::class);
+        $shortenedObject->shorten($latitude, $longitude);
+
+        // self is always in the same grid as self
+        $recoveredObject = $codeObject->recover($latitude, $longitude);
+        $recoveredCode = (string) $recoveredObject;
+        $this->assertEquals($expectedCode, $recoveredCode);
+
+        // using hardcoded precision values (see OLC private static method), test partial shortening
+        $precisions = [0.05, 1, 20];
+        foreach ($precisions as $index => $precision) {
+            // shorten it
+            $lenLoss = ($index + 1) * 2;
+            $flooredLatitude = floor($latitude / $precision) * $precision;
+            $flooredLongitude = floor($longitude / $precision) * $precision;
+            $innerShortenedObject = $codeObject->shorten($flooredLatitude, $flooredLongitude);
+            $this->assertTrue($innerShortenedObject->isShort());
+            $innerShortenedCode = (string) $innerShortenedObject;
+            $this->assertTrue(str_contains($expectedCode, $innerShortenedCode));
+            $this->assertTrue(strlen($innerShortenedCode) == strlen($expectedCode) - $lenLoss);
+
+            // recover it
+            $innerRecoveredObject = $codeObject->recover($flooredLatitude, $flooredLongitude);
+            $innerRecoveredCode = (string) $innerRecoveredObject;
+            $this->assertEquals($expectedCode, $innerRecoveredCode);
+        }
     }
 
     private function confirmCoordinatesValidity(float $latitude, float $longitude): void
