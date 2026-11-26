@@ -41,6 +41,8 @@ class OpenLocationCodeTest extends TestCase
         $this->assertEquals($expectedCode, $codeObject->code);
         // while OLC represents an area via lossful encoding, at least the area should contain the original point
         $this->assertTrue($codeObject->contains($latitude, $longitude));
+        // these codes are full
+        $this->assertTrue($codeObject->isFull());
 
         // for convenience, also test the code calculators here
         $floatCal = new CodeCalculatorFloat();
