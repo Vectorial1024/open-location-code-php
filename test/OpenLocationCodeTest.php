@@ -194,6 +194,22 @@ class OpenLocationCodeTest extends TestCase
 
             "Illegal alphabet" => ["A1A1A1A1+A1", false],
             "Illegal character" => ["9C3XGVJ1+8F", false],
+
+            "Short code len=1" => ['7+', false],
+            "Short code len=2" => ['77+', true],
+            "Short code len=3" => ['777+', false],
+            "Short code len=4" => ['7777+', true],
+            "Short code len=5" => ['77777+', false],
+            "Short code len=6" => ['777777+', true],
+            "Short code len=7" => ['7777777+', false],
+
+            "Short code len=1, tail" => ['7+77', false],
+            "Short code len=2, tail" => ['77+77', true],
+            "Short code len=3, tail" => ['777+77', false],
+            "Short code len=4, tail" => ['7777+77', true],
+            "Short code len=5, tail" => ['77777+77', false],
+            "Short code len=6, tail" => ['777777+77', true],
+            "Short code len=7, tail" => ['7777777+77', false],
         ];
     }
 
