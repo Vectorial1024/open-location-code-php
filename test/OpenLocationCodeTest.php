@@ -145,6 +145,19 @@ class OpenLocationCodeTest extends TestCase
         }
     }
 
+    #[DataProvider('outOfBoundsRecoveryProvider')]
+    public function testCorrectRecoverWithOutOfBoundsReference(string $shortCode, float $latitude, float $longitude, string $expectedCode): void
+    {
+        $recoveredCode = (string) OpenLocationCode::createFromCode($shortCode)->recover($latitude, $longitude);
+        $this->assertEquals($expectedCode, $recoveredCode);
+    }
+
+    #[DataProvider('outOfBoundsEncodingProvider')]
+    public function testCorrectCodeFromOutOfBoundsLongitude(float $latitude, float $longitude, string $expectedCode): void
+    {
+        $this->assertEquals($expectedCode, OpenLocationCode::encode($latitude, $longitude));
+    }
+
     private function confirmCoordinatesValidity(float $latitude, float $longitude): void
     {
         // check latitude
@@ -256,6 +269,35 @@ class OpenLocationCodeTest extends TestCase
             "14 digits" => ["8J7GRCCX+FMJWRQ", 14, 35.8212246, 70.449142089844, 35.8212248, 70.449142578125],
             "15 digits" => ["849VGJQF+VX7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
             "More than 15 digits" => ["849VGJQF+VX7QR3J7QR3J", 15, 37.5396691200, -122.3750698242, 37.5396691600, -122.3750697021],
+        ];
+    }
+
+    public static function outOfBoundsRecoveryProvider(): array
+    {
+        // short code, reference latitude, reference longitude, expected full code
+        // (checked against the Python reference implementation)
+        return [
+            "Reference longitude 180" => ["+8MFH", 68.927696, 180, "9VWXWXHX+8MFH"],
+            "Reference longitude -180" => ["5MQ3HF+6CW7", -26.223277, -180, "5V5MQ3HF+6CW7"],
+            "Nearest match across the antimeridian (west)" => ["MJ65HR+RQ43", -56.770703, -179.99, "3VMJ65HR+RQ43"],
+            "Nearest match across the antimeridian (east)" => ["CX+22", 0, 179.99, "6VGX2XCX+22"],
+            "Reference latitude 91, longitude -200" => ["2C+22", 91, -200, "CVX2X22C+22"],
+            "Reference longitude -360" => ["C2+22", -45, -360, "4F7222C2+22"],
+            "Reference latitude 90, longitude 540" => ["XQ+XX", 90, 540, "CVXXXXXQ+XX"],
+            "Reference latitude 135, longitude -540.5" => ["XQ+XX", 135, -540.5, "CVXXXFXQ+XX"],
+            "Reference latitude -120, longitude -180.0001" => ["22+22", -120, -180.0001, "22222222+22"],
+        ];
+    }
+
+    public static function outOfBoundsEncodingProvider(): array
+    {
+        // latitude, longitude, expected code (checked against the Python reference implementation)
+        return [
+            "Longitude -360" => [0, -360, "6FG22222+22"],
+            "Longitude -200" => [0, -200, "6VG22222+22"],
+            "Longitude -540.5" => [0, -540.5, "6VGX2G22+22"],
+            "Longitude -180.0001" => [10, -180.0001, "7V2X2X2X+2X"],
+            "Longitude 540" => [0, 540, "62G22222+22"],
         ];
     }
 

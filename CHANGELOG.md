@@ -6,6 +6,7 @@ Note: you may refer to `README.md` for description of features.
 
 - Fixed decoding of OLC with more than 10 digits: the grid digits were read as pair digits (https://github.com/Vectorial1024/open-location-code-php/pull/7).
 - Fixed validity of OLC not checking for maximum code length
+- Fixed normalization of longitudes below -180, which also broke `recover()` near the antimeridian (https://github.com/Vectorial1024/open-location-code-php/issues/8)
 - Added more test cases
 
 ## 1.1.4 (2026-05-22)
