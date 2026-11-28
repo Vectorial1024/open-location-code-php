@@ -210,6 +210,22 @@ class OpenLocationCodeTest extends TestCase
             "Short code len=5, tail" => ['77777+77', false],
             "Short code len=6, tail" => ['777777+77', true],
             "Short code len=7, tail" => ['7777777+77', false],
+
+            // first code pair, some chars are illegal
+            "Wrong leader: latitude F" => ["F7777777+77", false],
+            "Wrong leader: latitude G" => ["G7777777+77", false],
+            "Wrong leader: latitude H" => ["H7777777+77", false],
+            "Wrong leader: latitude J" => ["J7777777+77", false],
+            "Wrong leader: latitude M" => ["M7777777+77", false],
+            "Wrong leader: latitude P" => ["P7777777+77", false],
+            "Wrong leader: latitude Q" => ["Q7777777+77", false],
+            "Wrong leader: latitude R" => ["R7777777+77", false],
+            "Wrong leader: latitude V" => ["V7777777+77", false],
+            "Wrong leader: latitude W" => ["W7777777+77", false],
+            "Wrong leader: latitude X" => ["X7777777+77", false],
+            "Wrong leader: longitude W" => ["7W777777+77", false],
+            "Wrong leader: longitude X" => ["7X777777+77", false],
+
         ];
     }
 
